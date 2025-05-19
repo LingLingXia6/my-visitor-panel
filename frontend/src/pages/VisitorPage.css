@@ -43,3 +43,192 @@
   padding-top: 16px;
   border-top: 1px dashed #d9d9d9;
 }
+
+.companion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.companion-table {
+  margin-top: 16px;
+}
+
+/* 表格内输入框样式 */
+.companion-table .ant-table-cell .ant-input {
+  border-radius: 2px;
+}
+
+/* 表格行样式 */
+.companion-table .ant-table-tbody > tr > td {
+  padding: 8px;
+}
+
+/* 添加以下样式到现有的 CSS 文件中 */
+
+/* 序号单元格样式 */
+.companion-index-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* 操作按钮容器 */
+.companion-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 0 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 3;
+}
+
+/* PC端悬停显示操作按钮 */
+@media screen and (min-width: 769px) {
+  .companion-index-cell:hover .companion-actions {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* 移动端点击显示操作按钮 */
+.companion-actions.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 操作按钮样式 */
+.companion-actions .ant-btn {
+  padding: 0 4px;
+  font-size: 14px;
+}
+
+/* 表格空数据样式 */
+.companion-table .ant-table-placeholder .ant-empty-description {
+  color: #999;
+}
+
+/* 随行人员弹框样式 */
+.companion-modal .ant-modal-body {
+  padding: 24px;
+}
+
+/* 移动端抽屉样式 */
+.companion-modal.ant-drawer .ant-drawer-body {
+  padding: 24px;
+}
+
+/* 表格滚动样式优化 */
+.companion-table .ant-table-container {
+  overflow-x: auto;
+}
+
+.companion-table .ant-table-fixed-left {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.companion-table .ant-table-fixed-right {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+/* 表格边框样式 */
+.companion-table .ant-table-cell {
+  white-space: nowrap;
+}
+
+/* 表格操作列样式 */
+.companion-table .ant-table-cell:last-child {
+  text-align: center;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .companion-table .ant-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .companion-modal.ant-drawer .ant-drawer-content-wrapper {
+    height: 100% !important;
+  }
+}
+
+.safety-notice {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 4px;
+  border-left: 4px solid #1890ff;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.safety-notice.collapsed {
+  height: 92px;
+}
+
+.safety-notice.expanded {
+  height: auto;
+}
+
+.safety-notice-header {
+  margin-bottom: 8px;
+}
+
+.safety-notice-content {
+  overflow: hidden;
+}
+
+.safety-list {
+  margin-top: 8px;
+  padding-left: 24px;
+}
+
+.safety-list li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* 强调重要内容 */
+.safety-notice .ant-typography-danger {
+  font-weight: bold;
+}
+
+.expand-button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+  background: linear-gradient(to bottom, rgba(249, 249, 249, 0.5), rgba(249, 249, 249, 1));
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.expand-button .anticon {
+  margin-left: 4px;
+}
+
+.safety-notice.expanded .expand-button {
+  background: #f9f9f9;
+}
