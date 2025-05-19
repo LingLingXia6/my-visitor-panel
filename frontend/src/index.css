@@ -1,0 +1,158 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #edf1f7; /* 冷色系背景 */
+  color: #2c3e50;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: transparent;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.ant-layout-sider-trigger {
+  background: #e0e7f2; /* 匹配侧边栏颜色 */
+}
+
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #0071e3;
+}
+
+/* 添加菜单项样式 */
+.ant-menu-item {
+  border-radius: 8px;
+  margin: 4px 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  will-change: background-color, color;
+}
+
+/* 减少 hover 效果的复杂度 */
+.ant-btn:hover {
+  transform: none; /* 移除可能导致重绘的变换效果 */
+}
+
+.login-button:hover {
+  background-color: #0077ed;
+  border-color: #0077ed;
+  box-shadow: 0 2px 6px rgba(0, 113, 227, 0.3);
+  /* 移除 transform 效果 */
+}
+
+/* 优化模糊效果，在低端设备上可能导致性能问题 */
+.login-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background-color: rgba(245, 247, 250, 0.9);
+  /* 考虑移除或简化 backdrop-filter */
+  /* backdrop-filter: blur(10px); */
+  border: none;
+  overflow: hidden;
+}
+
+.ant-menu-item:hover {
+  background-color: rgba(0, 113, 227, 0.05);
+}
+
+.ant-menu-item-selected {
+  background-color: rgba(0, 113, 227, 0.1) !important;
+  color: #0071e3 !important;
+}
+
+.ant-menu-item-selected .ant-menu-item-icon {
+  color: #0071e3 !important;
+}
+
+/* 卡片样式优化 */
+.ant-card {
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  border: none;
+  background-color: #f5f7fa;
+}
+
+/* 表格样式优化 */
+.ant-table {
+  background: transparent;
+}
+
+.ant-table-thead > tr > th {
+  background-color: rgba(235, 240, 248, 0.8) !important;
+  color: #2c3e50;
+  font-weight: 500;
+  border-bottom: 1px solid #d0dae9;
+}
+
+.ant-table-tbody > tr > td {
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #e0e7f2;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: rgba(0, 113, 227, 0.05) !important;
+}
+
+/* 按钮样式优化 */
+.ant-btn {
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.ant-btn-primary {
+  background-color: #0071e3;
+  border-color: #0071e3;
+}
+
+.ant-btn-primary:hover {
+  background-color: #0077ed;
+  border-color: #0077ed;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 113, 227, 0.2);
+}
+
+/* 表单控件样式 */
+.ant-input, .ant-select-selector, .ant-picker {
+  background-color: #f5f7fa !important;
+  border-color: #d0dae9 !important;
+}
+
+.ant-input:hover, .ant-select-selector:hover, .ant-picker:hover {
+  border-color: #a0b4d0 !important;
+}
+
+.ant-input:focus, .ant-select-selector:focus, .ant-picker:focus {
+  border-color: #0071e3 !important;
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2) !important;
+}
+
+/* 下拉菜单样式 */
+.ant-dropdown-menu {
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ant-dropdown-menu-item:hover {
+  background-color: rgba(0, 113, 227, 0.05);
+}
