@@ -41,10 +41,67 @@ const VisitorPage = () => {
   const onFinish = (values) => {
     // 将随行人信息添加到提交的数据中
     values.companions = companions.filter(item => item.name || item.idCard || item.phone || item.licensePlate);
+    
+    // 处理日期时间格式
+    if (values.visitStartTime) {
+      // 将 dayjs 对象转换为 ISO 格式的字符串
+      values.visitStartTime = values.visitStartTime.format('YYYY-MM-DD HH:mm:ss');
+    }
+    
+    // 构建符合后端API格式的数据结构
+    const apiData = {
+      visitor: {
+        name: values.visitorName,
+        phone: values.visitorPhone,
+        id_card: values.idCard,
+        company: values.visitorCompany || values.companyName
+      },
+      visitForm: {
+        visit_reason: values.visitReason,
+        visit_time: values.visitStartTime,
+        location: values.visitLocation,
+        host_name: values.name,
+        host_phone: values.hostPhone
+      },
+      companions: values.companions.map(companion => ({
+        name: companion.name,
+        phone: companion.phone,
+        id_card: companion.idCard
+      }))
+    };
+    
     console.log('表单提交值:', values);
-    message.success('登记信息提交成功！');
-    form.resetFields();
-    setCompanions([]); // 重置为空数组
+    console.log('API提交数据:', apiData);
+    
+    // 发送数据到后端API
+    fetch('http://127.0.0.1:8082/visitors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(apiData),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('网络响应不正常');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('提交成功:', data);
+      message.success('登记信息提交成功！');
+      form.resetFields();
+      setCompanions([]);
+    })
+    .catch(error => {
+      console.error('提交失败:', error);
+      message.error('提交失败，请稍后重试');
+    });
+    
+    // 移除这里的成功提示，因为已经在 fetch 成功回调中添加了
+    // message.success('登记信息提交成功！');
+    // form.resetFields();
+    // setCompanions([]); // 重置为空数组
   };
 
   // 打开添加随行人员弹框
@@ -251,7 +308,7 @@ const VisitorPage = () => {
     <div className="visitor-container">
       <div className="visitor-form-container">
         <div className="visitor-header">
-          <Title level={4}>上飞院访客预约登记表</Title>
+          <Title level={4}>铁锚访客预约登记表</Title>
           <div className="visitor-notice">
             <Text type="danger">提前预约可以节省您的时间，请务必填写真实信息，谢谢您的配合！</Text>
             <Text type="secondary">【预约成功后，工作人员会与您联系】</Text>
@@ -282,24 +339,24 @@ const VisitorPage = () => {
                   <li>请访客务必携带好身份证。</li>
                   <li>【重要】被访人员手机号需与企业微信中登记的<Text type="danger" strong>手机号一致</Text>，系统根据被访人手机号推送审批单及相关信息。被访人可在"企业微信--我--设置--账号"中确认。</li>
                   <li>访客预约审批流程为：用户提单--被访人审批--部门领导审批--结束。</li>
-                  <li>外部人员来访联系工作或参加活动，遵守上飞院相关制度，接待部门应认真审核，坚持"谁接待，谁负责"的原则，接待部门必须有专人做好全程陪同。</li>
+                  <li>外部人员来访联系工作或参加活动，遵守铁锚相关制度，接待部门应认真审核，坚持"谁接待，谁负责"的原则，接待部门必须有专人做好全程陪同。</li>
                   <li>外国商客来访业务为采供部归口管理（请到企业微信--表单流程--外商及外商代理来院审批单提交表单），接待部门应自觉做到全程陪同。</li>
                 </ol>
                 <Text strong style={{ fontSize: '16px', color: '#1890ff', marginTop: '16px', display: 'block' }}>
-                  上飞院进院安全告知：
+                  铁锚进院安全告知：
                 </Text>
                 <Text>根据上海飞机设计研究院《治安保卫管理规定》（MR9421C），请进院人员做好以下安全保卫及保密管理工作：</Text>
                 <ol className="safety-list" start="1">
-                  <li>遵守国家安全相关法律法规，遵守中国商飞公司及上飞院安全生产、治安保卫、保密等各项规定。</li>
-                  <li>在上飞院办公期间，接待部门做好全程陪同。</li>
+                  <li>遵守国家安全相关法律法规，遵守中国商飞公司及铁锚安全生产、治安保卫、保密等各项规定。</li>
+                  <li>在铁锚办公期间，接待部门做好全程陪同。</li>
                   <li>来院办理的访客证及临时车辆通行证须当日归还。</li>
                   <li>严禁私自涂改、冒用或借用他人出入证件，严禁通过移动通讯设备复制门禁权限。</li>
                   <li>严格遵守《治安保卫管理规定》要求，履行保卫、保密职责，严禁进入与工作无关的区域。</li>
-                  <li>未经允许，不触碰员工电脑及其他办公设备，上飞院内不随意违规拍照发布。</li>
-                  <li>因工作必须携带危险化品、易燃易爆等物资入院的，接待部门提前申报上飞院安全管理部门。</li>
+                  <li>未经允许，不触碰员工电脑及其他办公设备，铁锚内不随意违规拍照发布。</li>
+                  <li>因工作必须携带危险化品、易燃易爆等物资入院的，接待部门提前申报铁锚安全管理部门。</li>
                   <li>进入或离开院区时，遵守携带物资进出管理要求，提前办理相关入院、出院物资审批手续（私人物品除外），主动配合安保人员检查，不以任何理由拒绝检查。</li>
-                  <li>遵守上飞院内部道路交通安全规定，机动车应停放在划线车位内。车辆在院区内限速30公里以下，特殊路段根据限速标志执行。严禁车辆滞留院区。</li>
-                  <li>工作期间，所获取的涉及上飞院的文件资料、样品或原型等信息均须保密。</li>
+                  <li>遵守铁锚内部道路交通安全规定，机动车应停放在划线车位内。车辆在院区内限速30公里以下，特殊路段根据限速标志执行。严禁车辆滞留院区。</li>
+                  <li>工作期间，所获取的涉及铁锚的文件资料、样品或原型等信息均须保密。</li>
                 </ol>
               </div>
               
@@ -439,19 +496,7 @@ const VisitorPage = () => {
               <TextArea rows={4} placeholder="请简要描述您的来访目的" />
             </Form.Item>
 
-            {/* 添加照片上传 */}
-            <Form.Item
-              name="photo"
-              label="照片（非必填）"
-            >
-              <Upload
-                listType="picture"
-                maxCount={1}
-                beforeUpload={() => false} // 阻止自动上传
-              >
-                <Button icon={<UploadOutlined />}>上传照片</Button>
-              </Upload>
-            </Form.Item>
+            
           </div>
 
           {/* 添加随行人信息 */}

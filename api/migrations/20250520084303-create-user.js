@@ -9,28 +9,31 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: {
-        type: Sequelize.STRING
-      },
       username: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50),
+        allowNull: false,
+        unique: true
       },
-      password: {
-        type: Sequelize.STRING
-      },
-      introduce: {
-        type: Sequelize.TEXT
+      password_hash: {
+        type: Sequelize.STRING(255),
+        allowNull: false
       },
       role: {
-        type: Sequelize.TINYINT
+        type: Sequelize.ENUM('admin', 'viewer'),
+        defaultValue: 'viewer',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'created_at'
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'updated_at'
       }
     });
   },

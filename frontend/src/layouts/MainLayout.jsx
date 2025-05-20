@@ -11,7 +11,9 @@ import {
   SoundOutlined,
   ShoppingCartOutlined,
   WalletOutlined,
-  LockOutlined
+  LockOutlined,
+  FormOutlined,
+  UnorderedListOutlined
 } from '@ant-design/icons';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie'; 
@@ -69,7 +71,9 @@ const MainLayout = () => {
       '/select-singer-songs': '3',
       '/orders': '4',
       '/withdrawals': '5',
-      '/change-password': '6'
+      '/change-password': '6',
+      '/visitor': '7',
+      '/visit-forms': '8'  // 添加新路径映射
     };
     
     // 查找匹配的路径并设置对应的键值
@@ -139,11 +143,22 @@ const MainLayout = () => {
     //   icon: <WalletOutlined />,
     //   label: <Link to="/withdrawals">提现管理</Link>
     // },
+    
+    {
+      key: '7',
+      icon: <FormOutlined />,
+      label: <Link to="/visitor">访客在线申请表</Link>
+    },
+    {
+      key: '8',
+      icon: <UnorderedListOutlined />,
+      label: <Link to="/visit-forms">访客申请单</Link>
+    },
     {
       key: '6',
       icon: <LockOutlined />,
       label: <Link to="/change-password">修改密码</Link>
-    }
+    },
   ];
 
   return (

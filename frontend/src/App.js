@@ -7,17 +7,20 @@ import Login from './pages/Login';
 
 import Users from './pages/Users';
 import ChangePassword from './pages/ChangePassword';
-import NotFound from './pages/NotFound'; // 引入404页面组件
-import VisitorPage from './pages/VisitorPage'; // 引入访客登记页面
+import NotFound from './pages/NotFound';
+import VisitorPage from './pages/VisitorPage';
+import VisitFormList from './pages/VisitFormList'; // 导入新组件
 
 import { UserProvider } from './context/UserContext'; 
 
 // 路由配置常量
+// 修改 APP_ROUTES 常量，添加访客申请单列表路由
 const APP_ROUTES = [
   // 系统设置路由
   { path: "change-password", element: <ChangePassword />, icon: "Lock" },
   { path: "users", element: <Users />, icon: "Team" },
-  { path: "visitor", element: <VisitorPage />, icon: "Form" } // 添加访客登记路由
+  { path: "visitor", element: <VisitorPage />, icon: "Form" }, // 访客登记路由
+  { path: "visit-forms", element: <VisitFormList />, icon: "UnorderedList" } // 添加访客申请单列表路由
 ];
 
 // 路由守卫组件 - 从 Cookie 获取 token
@@ -47,7 +50,7 @@ function App() {
   }, []);
   return (
     <ConfigProvider locale={zhCN}>
-      <UserProvider>
+      {/* <UserProvider> */}
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -68,7 +71,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      </UserProvider>
+      {/* </UserProvider> */}
     </ConfigProvider>
   );
 }
