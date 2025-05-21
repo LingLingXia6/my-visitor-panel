@@ -20,7 +20,7 @@ const VisitorPage = () => {
   // 添加是否为移动设备状态
   const [isMobile, setIsMobile] = useState(false);
   // 当前编辑的随行人员
-  const [currentCompanion, setCurrentCompanion] = useState({ key: 0, name: '', idCard: '', phone: '', licensePlate: '' });
+  const [currentCompanion, setCurrentCompanion] = useState({ key: 0, name: '', idCard: '', phone: '' });
   // 是否是新增
   const [isNewCompanion, setIsNewCompanion] = useState(true);
 
@@ -40,7 +40,7 @@ const VisitorPage = () => {
 
   const onFinish = (values) => {
     // 将随行人信息添加到提交的数据中
-    values.companions = companions.filter(item => item.name || item.idCard || item.phone || item.licensePlate);
+    values.companions = companions.filter(item => item.name || item.idCard || item.phone );
     console.log('表单提交值:', values);
     message.success('登记信息提交成功！');
     form.resetFields();
@@ -51,13 +51,13 @@ const VisitorPage = () => {
   const showCompanionModal = (isNew = true, record = null) => {
     if (isNew) {
       const newKey = companions.length > 0 ? Math.max(...companions.map(c => c.key)) + 1 : 1;
-      setCurrentCompanion({ key: newKey, name: '', idCard: '', phone: '', licensePlate: '' });
+      setCurrentCompanion({ key: newKey, name: '', idCard: '', phone: '' });
       setIsNewCompanion(true);
     } else {
       setCurrentCompanion({ ...record });
       setIsNewCompanion(false);
     }
-    companionForm.setFieldsValue(isNew ? { name: '', idCard: '', phone: '', licensePlate: '' } : record);
+    companionForm.setFieldsValue(isNew ? { name: '', idCard: '', phone: '' } : record);
     setCompanionModalVisible(true);
   };
 
@@ -166,12 +166,7 @@ const VisitorPage = () => {
       key: 'phone',
       width: 180,
     },
-    {
-      title: <span>随行人车牌号 <span style={{ color: '#ff4d4f' }}>*</span></span>,
-      dataIndex: 'licensePlate',
-      key: 'licensePlate',
-      width: 180,
-    },
+    
     // 移除操作列
   ];
 
@@ -235,13 +230,7 @@ const VisitorPage = () => {
           >
             <Input placeholder="请填写随行人手机号" />
           </Form.Item>
-          <Form.Item
-            name="licensePlate"
-            label="随行人车牌号"
-            rules={[{ required: true, message: '请输入随行人车牌号，没有可填"无"' }]}
-          >
-            <Input placeholder='请填写随行人车牌号，没有可填"无"' />
-          </Form.Item>
+          
         </Form>
       </ModalComponent>
     );
@@ -422,14 +411,7 @@ const VisitorPage = () => {
               <Input prefix={<IdcardOutlined />} placeholder="请输入您的身份证号" />
             </Form.Item>
 
-            {/* 添加车牌号 */}
-            <Form.Item
-              name="licensePlate"
-              label="车牌号"
-              extra="必填项，没有可填无"
-            >
-              <Input prefix={<CarOutlined />} placeholder="请输入车牌号" />
-            </Form.Item>
+            
 
             <Form.Item
               name="visitReason"
