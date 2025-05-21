@@ -40,11 +40,68 @@ const VisitorPage = () => {
 
   const onFinish = (values) => {
     // 将随行人信息添加到提交的数据中
-    values.companions = companions.filter(item => item.name || item.idCard || item.phone );
+    values.companions = companions.filter(item => item.name || item.idCard || item.phone || item.licensePlate);
+    
+    // 处理日期时间格式
+    if (values.visitStartTime) {
+      // 将 dayjs 对象转换为 ISO 格式的字符串
+      values.visitStartTime = values.visitStartTime.format('YYYY-MM-DD HH:mm:ss');
+    }
+    
+    // 构建符合后端API格式的数据结构
+    const apiData = {
+      visitor: {
+        name: values.visitorName,
+        phone: values.visitorPhone,
+        id_card: values.idCard,
+        company: values.visitorCompany || values.companyName
+      },
+      visitForm: {
+        visit_reason: values.visitReason,
+        visit_time: values.visitStartTime,
+        location: values.visitLocation,
+        host_name: values.name,
+        host_phone: values.hostPhone
+      },
+      companions: values.companions.map(companion => ({
+        name: companion.name,
+        phone: companion.phone,
+        id_card: companion.idCard
+      }))
+    };
+    
     console.log('表单提交值:', values);
-    message.success('登记信息提交成功！');
-    form.resetFields();
-    setCompanions([]); // 重置为空数组
+    console.log('API提交数据:', apiData);
+    
+    // 发送数据到后端API
+    fetch('http://127.0.0.1:8082/visitors', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(apiData),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('网络响应不正常');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('提交成功:', data);
+      message.success('登记信息提交成功！');
+      form.resetFields();
+      setCompanions([]);
+    })
+    .catch(error => {
+      console.error('提交失败:', error);
+      message.error('提交失败，请稍后重试');
+    });
+    
+    // 移除这里的成功提示，因为已经在 fetch 成功回调中添加了
+    // message.success('登记信息提交成功！');
+    // form.resetFields();
+    // setCompanions([]); // 重置为空数组
   };
 
   // 打开添加随行人员弹框
@@ -272,10 +329,10 @@ const VisitorPage = () => {
                   <li>【重要】被访人员手机号需与企业微信中登记的<Text type="danger" strong>手机号一致</Text>，系统根据被访人手机号推送审批单及相关信息。被访人可在"企业微信--我--设置--账号"中确认。</li>
                   <li>访客预约审批流程为：用户提单--被访人审批--部门领导审批--结束。</li>
                   <li>外部人员来访联系工作或参加活动，遵守铁锚相关制度，接待部门应认真审核，坚持"谁接待，谁负责"的原则，接待部门必须有专人做好全程陪同。</li>
-                 
+                  <li>外国商客来访业务为采供部归口管理（请到企业微信--表单流程--外商及外商代理来院审批单提交表单），接待部门应自觉做到全程陪同。</li>
                 </ol>
                 <Text strong style={{ fontSize: '16px', color: '#1890ff', marginTop: '16px', display: 'block' }}>
-                  铁锚进厂安全告知：
+                  铁锚进院安全告知：
                 </Text>
                 <Text>根据《治安保卫管理规定》（MR9421C），请进厂人员做好以下安全保卫及保密管理工作：</Text>
                 <ol className="safety-list" start="1">
@@ -421,19 +478,7 @@ const VisitorPage = () => {
               <TextArea rows={4} placeholder="请简要描述您的来访目的" />
             </Form.Item>
 
-            {/* 添加照片上传 */}
-            <Form.Item
-              name="photo"
-              label="照片（非必填）"
-            >
-              <Upload
-                listType="picture"
-                maxCount={1}
-                beforeUpload={() => false} // 阻止自动上传
-              >
-                <Button icon={<UploadOutlined />}>上传照片</Button>
-              </Upload>
-            </Form.Item>
+            
           </div>
 
           {/* 添加随行人信息 */}

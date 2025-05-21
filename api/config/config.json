@@ -3,7 +3,7 @@
     "username": "root",
     "port": 3306,
     "password": "@Password123",
-    "database": "myDB",
+    "database": "visitor",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+08:00"
@@ -12,7 +12,7 @@
     "username": "root",
     "port": 3306,
     "password": "@Password123",
-    "database": "myDB",
+    "database": "visitor",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+08:00"
