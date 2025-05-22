@@ -54,7 +54,7 @@ const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedKey, setSelectedKey] = useState('2'); // 默认选中歌手管理
+  const [selectedKey, setSelectedKey] = useState('0'); // 默认选中歌手管理
   
   // Define the missing refs
   const siderRef = useRef(null);
@@ -145,17 +145,28 @@ const MainLayout = () => {
     // },
     
     {
-      key: '7',
+      key: '0',
       icon: <FormOutlined />,
       label: <Link to="/visitor">访客在线申请表</Link>
     },
     {
-      key: '8',
+      key: '1',
       icon: <UnorderedListOutlined />,
       label: <Link to="/visit-forms">访客申请单</Link>
     },
+      {
+      key: '2',
+      icon: <UnorderedListOutlined />,
+      label: <Link to="">访客信息</Link>
+    },
     {
-      key: '6',
+      key: '3',
+      icon: <UnorderedListOutlined />,
+      label: <Link to="">被拜访人信息</Link>
+    },
+
+    {
+      key: '4',
       icon: <LockOutlined />,
       label: <Link to="/change-password">修改密码</Link>
     },
