@@ -1,5 +1,5 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('FormHostVisitors', {
@@ -9,32 +9,37 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      form_id: {
+      VisitorsFormId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'visitorsforms',
+          model: 'VisitorsForms',
           key: 'id'
         },
+        onDelete: 'CASCADE'
       },
       host_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'host',
+          model: 'Host',
           key: 'id'
         },
+        onDelete: 'CASCADE'
       },
       visitor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'visitors',
+          model: 'Visitors',
           key: 'id'
         },
+        onDelete: 'CASCADE'
       },
       isMinRole: {
-        type: Sequelize.TINYINT
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -45,7 +50,14 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    
+    // 添加复合唯一索引
+    await queryInterface.addIndex('FormHostVisitors', ['VisitorsFormId', 'host_id', 'visitor_id'], {
+      unique: true,
+      name: 'unique_form_host_visitor'
+    });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('FormHostVisitors');
   }

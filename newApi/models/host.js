@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Host.belongsTo(models.Visitors,{through:'formhostvisitors',foreignKey:'host_id'});
-      Host.belongsTo(models.VisitorsForms,{through:'formhostvisitors',foreignKey:'host_id'});
+      Host.belongsToMany(models.Visitors, { through: "FormHostVisitors", foreignKey: 'host_id' });
+      Host.belongsToMany(models.VisitorsForms, { through: "FormHostVisitors", foreignKey: 'host_id' });
     }
   }
   Host.init({
@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Host',
+    tableName: 'Host', // 明确指定表名
     indexes: [
       {
         unique: true,

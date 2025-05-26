@@ -60,9 +60,15 @@ const VisitorPage = () => {
         visit_reason: values.visitReason,
         visit_time: values.visitStartTime,
         location: values.visitLocation,
-        host_name: values.name,
-        host_phone: values.hostPhone
+      
       },
+      hosts: [
+        {
+          name: values.name,
+          phone: values.hostPhone
+        }
+      ],
+
       companions: values.companions.map(companion => ({
         name: companion.name,
         phone: companion.phone,
@@ -74,29 +80,29 @@ const VisitorPage = () => {
     console.log('API提交数据:', apiData);
     
     // 发送数据到后端API
-    fetch('http://127.0.0.1:8082/visitors', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(apiData),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('网络响应不正常');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('提交成功:', data);
-      message.success('登记信息提交成功！');
-      form.resetFields();
-      setCompanions([]);
-    })
-    .catch(error => {
-      console.error('提交失败:', error);
-      message.error('提交失败，请稍后重试');
-    });
+    // fetch('http://127.0.0.1:8082/visitors', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(apiData),
+    // })
+    // .then(response => {
+    //   if (!response.ok) {
+    //     throw new Error('网络响应不正常');
+    //   }
+    //   return response.json();
+    // })
+    // .then(data => {
+    //   console.log('提交成功:', data);
+    //   message.success('登记信息提交成功！');
+    //   form.resetFields();
+    //   setCompanions([]);
+    // })
+    // .catch(error => {
+    //   console.error('提交失败:', error);
+    //   message.error('提交失败，请稍后重试');
+    // });
     
     // 移除这里的成功提示，因为已经在 fetch 成功回调中添加了
     // message.success('登记信息提交成功！');

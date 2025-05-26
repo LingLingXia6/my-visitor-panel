@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-       VisitorsForms.belongsToMany(models.Host,{ through: "formhostvisitors", foreignKey: 'form_id' });
-      VisitorsForms.belongsToMany(models.visitors,{ through: "formhostvisitors", foreignKey: 'form_id' });
+      VisitorsForms.belongsToMany(models.Host, { through: "FormHostVisitors", foreignKey: 'VisitorsFormId' });
+      VisitorsForms.belongsToMany(models.Visitors, { through: "FormHostVisitors", foreignKey: 'VisitorsFormId' });
     }
   }
   VisitorsForms.init({

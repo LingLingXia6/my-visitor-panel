@@ -33,8 +33,11 @@ router.post('/', [
   body('visitForm.visit_reason').notEmpty().withMessage('来访事由不能为空'),
   body('visitForm.visit_time').notEmpty().withMessage('来访时间不能为空').isISO8601().withMessage('请输入正确的日期时间格式'),
   body('visitForm.location').optional().isLength({ max: 100 }).withMessage('来访地点不能超过100个字符'),
-  body('visitForm.host_name').notEmpty().withMessage('被访人姓名不能为空').isLength({ max: 100 }).withMessage('被访人姓名不能超过100个字符'),
-  body('visitForm.host_phone').notEmpty().withMessage('被访人手机号不能为空').matches(/^1[3-9]\d{9}$/).withMessage('请输入正确的手机号码'),
+  
+  // 被访人信息验证
+  body('hosts').isArray().withMessage('被访人信息必须是数组').notEmpty().withMessage('被访人不能为空'),
+  body('hosts.*.name').notEmpty().withMessage('被访人姓名不能为空').isLength({ max: 100 }).withMessage('被访人姓名不能超过100个字符'),
+  body('hosts.*.phone').notEmpty().withMessage('被访人手机号不能为空').matches(/^1[3-9]\d{9}$/).withMessage('请输入正确的手机号码'),
   
   // 随行人信息验证
   body('companions').isArray().withMessage('随行人信息必须是数组'),
@@ -47,61 +50,125 @@ router.post('/', [
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
+console.log('db.Host',db.Host);
   // 开始事务
   const t = await db.sequelize.transaction();
 
   try {
-    const { visitor, visitForm, companions } = req.body;
+    const { visitor, visitForm, hosts, companions } = req.body;
   
-    // 1. 创建访客记录
-    const newVisitor = await Visitor.create(visitor, { transaction: t });
-  
-    // 2. 创建访问表单记录 - 移除错误的tableName选项
-    const newVisitForm = await VisitForm.create({
-      ...visitForm,
-      visitor_id: newVisitor.id
-    }, { 
+    // 1. 创建访客记录 - 移除不存在的 company 字段
+    const visitorData = {
+      name: visitor.name,
+      phone: visitor.phone,
+      id_card: visitor.id_card,
+      company: visitor.company // 这里添加了 company 字段，因为它是可选的，所以需要在这里添加
+    };
+    let newVisitor=null;
+    console.log('visitorData',visitorData);
+    // 先查询是否有重复的身份证号
+    const existingVisitor = await db.Visitors.findOne({
+      where: { id_card: visitor.id_card },
       transaction: t
-      // 移除了这里的tableName选项
     });
+    if (existingVisitor) {
+      newVisitor=existingVisitor;
+      // 更新访客信息
+      await existingVisitor.update(visitorData, { transaction: t });
+    }else{
+      newVisitor = await db.Visitors.create(visitorData, { transaction: t });
+    }
+    
   
-    // 3. 创建随行人记录
+    // 2. 创建访问表单记录
+    const newVisitForm = await db.VisitorsForms.create({
+      ...visitForm
+    }, { transaction: t });
+    
+    // 3. 处理被访人信息
+    let mainHost = null;
+    if (hosts && hosts.length > 0) {
+      // 查找或创建主被访人
+      console.log('db.Host',db.Host);
+      console.log('hosts[0].phone',hosts[0].phone);
+      // 修改顶部导入语句，添加 Host 模型
+      const { Visitor, Companion, VisitForm, Attendee, Host } = db;
+      
+      // 在事务代码段中，修改查询语句
+      const [hostRecord, created] = await Host.findOrCreate({
+        where: { phone: hosts[0].phone },
+        defaults: {
+          name: hosts[0].name,
+          phone: hosts[0].phone
+        },
+        transaction: t
+      });
+      console.log('hostRecord111',hostRecord);
+      mainHost = hostRecord;
+      
+      // 创建主被访人与表单的关联记录
+      await db.FormHostVisitors.create({
+        VisitorsFormId: newVisitForm.id,
+        host_id: mainHost.id,
+        visitor_id: newVisitor.id,
+        isMinRole: 1 // 主访客
+      }, { transaction: t });
+      
+      // 处理其他被访人（如果有）
+      for (let i = 1; i < hosts.length; i++) {
+        const [otherHost, created] = await db.Host.findOrCreate({
+          where: { phone: hosts[i].phone },
+          defaults: {
+            name: hosts[i].name,
+            phone: hosts[i].phone
+          },
+          transaction: t
+        });
+       
+        // 创建其他被访人与表单的关联记录
+        await db.FormHostVisitors.create({
+          VisitorsFormId: newVisitForm.id,
+          host_id: otherHost.id,
+          visitor_id: newVisitor.id,
+          isMinRole: 0 // 非主访客
+        }, { transaction: t });
+      }
+    }
+  
+    // 4. 创建随行人记录并关联到表单
     const newCompanions = [];
     if (companions && companions.length > 0) {
       for (const companion of companions) {
-        const newCompanion = await Companion.create({
-          ...companion,
-          visitor_id: newVisitor.id
-        }, { transaction: t });
-        newCompanions.push(newCompanion);
-      }
-    }
-    
-    // 4. 创建参与者记录 - 首先添加访客本人
-    await Attendee.create({
-      form_id: newVisitForm.id,
-      name: newVisitor.name,
-      role: 'visitor',
-      original_id: newVisitor.id,
-      phone: newVisitor.phone,
-      id_card: newVisitor.id_card
-    }, { transaction: t });
-    
-    // 5. 添加随行人到参与者表
-    if (newCompanions.length > 0) {
-      for (const companion of newCompanions) {
-        await Attendee.create({
-          form_id: newVisitForm.id,
+        // 创建随行人作为访客 - 移除不存在的 company 字段
+        const newCompanionVisitor = await db.Visitors.create({
           name: companion.name,
-          role: 'companion',
-          original_id: companion.id,
           phone: companion.phone,
-          id_card: companion.id_card
+          id_card: companion.id_card,
+          company: visitor.company
+          // 不包含 company 字段
         }, { transaction: t });
+        
+        newCompanions.push(newCompanionVisitor);
+        
+        // 创建随行人与表单和被访人的关联
+        if (mainHost) {
+          await db.FormHostVisitors.create({
+            VisitorsFormId: newVisitForm.id,
+            host_id: mainHost.id,
+            visitor_id: newCompanionVisitor.id,
+            isMinRole: 0 // 随行人
+          }, { transaction: t });
+        }
       }
     }
-    
+    // test
+    const visitorForms=await db.VisitorsForms.findAll({
+      include: [
+        { model: db.Visitors},
+        { model: db.Host},
+      ]
+    });
+    console.log();
     // 提交事务
     await t.commit();
     
@@ -109,7 +176,9 @@ router.post('/', [
     const result = {
       visitor: newVisitor,
       visitForm: newVisitForm,
-      companions: newCompanions
+      hosts: mainHost ? [mainHost] : [],
+      companions: newCompanions,
+      data:visitorForms
     };
     
     res.status(201).json({

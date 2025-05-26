@@ -1,5 +1,5 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Visitors', {
@@ -10,20 +10,21 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100),
+        allowNull: false
       },
       phone: {
-        allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(20),
+        allowNull: false
       },
       id_card: {
-         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(20),
+        allowNull: false
       },
-      company: { 
-         allowNull: false,
-        type: Sequelize.STRING
+      company: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+        defaultValue: ''
       },
       createdAt: {
         allowNull: false,
@@ -34,12 +35,14 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addIndex(
-    'Visitors', {
-      fields: ['id_card'],  // 要索引的字段
-      unique: true        // 唯一索引
+    
+    // 添加唯一索引
+    await queryInterface.addIndex('Visitors', ['id_card'], {
+      unique: true,
+      name: 'visitors_id_card_unique'
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Visitors');
   }

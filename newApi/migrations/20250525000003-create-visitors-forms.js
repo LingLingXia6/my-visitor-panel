@@ -1,21 +1,29 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Hosts', {
+    await queryInterface.createTable('VisitorsForms', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING,
-         allowNull: false,
+      visit_reason: {
+        type: Sequelize.TEXT,
+        allowNull: false
       },
-      phone: {
+      visit_time: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      location: {
         type: Sequelize.STRING,
-         allowNull: false,
+        allowNull: false
+      },
+      arrival_time: {
+        type: Sequelize.DATE,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -26,13 +34,9 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addIndex(
-    'Host', {
-      fields: ['phone'],  // 要索引的字段
-      unique: true        // 唯一索引
-    });
   },
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Hosts');
+    await queryInterface.dropTable('VisitorsForms');
   }
 };
