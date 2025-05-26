@@ -2,18 +2,18 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const db = require('../models');
-// const { Visitor, Companion, VisitForm, Attendee } = db;
 const {VisitorsForms,Visitors,FormHostVisitors,Host,User}=db;
 const { Op } = require('sequelize');
 console.log('db',db);
 // 获取所有访客
 router.get('/', async (req, res) => {
   try {
-    const visitors = await Visitor.findAll({
+    const visitors = await Visitors.findAll({
       include: [
-        { model: Companion },
-        { model: VisitForm }
-      ]
+        { model: VisitorsForms ,distinct: true },
+        { model: Host ,distinct: true }
+      ],
+      distinct: true
     });
     res.json(visitors);
   } catch (error) {

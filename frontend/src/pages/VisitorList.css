@@ -1,0 +1,293 @@
+.visitor-list-container {
+  padding: 24px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+}
+
+.visitor-info {
+  margin-bottom: 20px;
+  line-height: 2;
+}
+
+.visitor-info .ant-typography {
+  margin-bottom: 8px;
+}
+
+.visit-history .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  transition: all 0.3s;
+}
+
+.visit-history .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.visit-history p {
+  margin-bottom: 8px;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .visitor-list-container {
+    padding: 12px;
+  }
+  
+  .ant-modal {
+    max-width: 95%;
+  }
+}
+
+
+/* 在现有样式基础上添加 */
+
+/* 基础容器样式 */
+/* 清理重复样式，保留最新的定义 */
+.visitor-list-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100%;
+}
+
+/* 卡片样式 */
+.visitor-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.visitor-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 20px;
+}
+
+.visitor-card .ant-card-head-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 表格样式 */
+.visitor-table {
+  margin-top: 8px;
+}
+
+.visitor-table .ant-table-thead > tr > th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+  color: #333;
+  padding: 12px 16px;
+}
+
+.visitor-table .ant-table-tbody > tr > td {
+  padding: 12px 16px;
+}
+
+.visitor-table .ant-table-tbody > tr:hover > td {
+  background-color: #f0f7ff;
+}
+
+/* 详情模态框样式 */
+.visitor-detail-modal .ant-modal-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.visitor-detail-modal .ant-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.visitor-detail-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.visitor-detail-modal .ant-modal-body {
+  padding: 20px;
+}
+
+/* 访客基本信息样式 */
+.visitor-basic-info {
+  background-color: #f5f8ff;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-item {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info-icon {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+.info-divider {
+  margin: 20px 0;
+}
+
+/* 访问历史标题 */
+.visit-history-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.visit-history-header .anticon {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+/* 访问记录样式 */
+.visit-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.visit-year-group {
+  margin-bottom: 4px;
+}
+
+.year-collapse .ant-collapse-header {
+  font-weight: 500;
+  padding: 10px 16px;
+  background-color: #f5f5f5;
+  border-radius: 6px !important;
+  color: #333;
+}
+
+.year-collapse .ant-collapse-content-box {
+  padding: 8px 0;
+}
+
+.visit-item {
+  margin-bottom: 12px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.visit-item:last-child {
+  margin-bottom: 0;
+}
+
+.visit-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #f5f8ff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.visit-date {
+  font-weight: 500;
+  color: #333;
+}
+
+.visit-id {
+  color: #999;
+  font-size: 12px;
+}
+
+.visit-item-content {
+  padding: 12px 16px;
+}
+
+.visit-location, .visit-host, .visit-reason {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.visit-location:last-child, .visit-host:last-child, .visit-reason:last-child {
+  margin-bottom: 0;
+}
+
+.visit-location .anticon, .visit-host .anticon {
+  margin-right: 8px;
+  margin-top: 3px;
+  color: #1890ff;
+}
+
+.visit-reason {
+  color: #666;
+  padding-left: 22px;
+}
+
+/* 空状态样式 */
+.empty-records {
+  margin: 24px 0;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .visitor-list-container {
+    padding: 12px;
+  }
+  
+  .info-row {
+    flex-direction: column;
+  }
+  
+  .info-item {
+    min-width: 100%;
+  }
+  
+  .visitor-detail-modal .ant-modal-content {
+    max-width: 95vw;
+    margin: 0 auto;
+  }
+}
+
+.visit-group {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.visit-group .ant-collapse {
+  border: none;
+  background: transparent;
+}
+
+.visit-group .ant-collapse-header {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.visit-card {
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  transition: all 0.3s;
+}
+
+.visit-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.visit-card:last-child {
+  margin-bottom: 0;
+}

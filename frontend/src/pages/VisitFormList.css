@@ -1,195 +1,199 @@
+/* 主容器样式 */
 .visit-form-list-container {
-  padding: 24px;
-  background-color: #f8fafc;
-  min-height: 100vh;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
+/* 卡片样式 */
 .visit-form-card {
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  background-color: #fff;
-  overflow: hidden;
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-}
-
-.title-icon {
-  margin-right: 12px;
-  font-size: 22px;
-  color: #1677ff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .visit-form-card .ant-card-head {
-  border-bottom: none;
-  padding: 20px 24px;
-}
-
-.visit-form-card .ant-card-body {
-  padding: 0;
-}
-
-.visit-form-table {
-  margin: 0;
-}
-
-.visit-form-table .ant-table-thead > tr > th {
-  background-color: #fafafa;
-  font-weight: 500;
+  padding: 12px 20px;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.table-row {
-  transition: all 0.2s ease;
+.visit-form-card .ant-card-head-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
 }
 
-.table-row:hover {
+/* 表格样式 */
+.visit-form-table {
+  margin-top: 8px;
+}
+
+.visit-form-table .ant-table-thead > tr > th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+  color: #333;
+  padding: 12px 16px;
+}
+
+.visit-form-table .ant-table-tbody > tr > td {
+  padding: 12px 16px;
+}
+
+.visit-form-table .ant-table-tbody > tr:hover > td {
   background-color: #f0f7ff;
 }
 
-.id-tag {
-  border-radius: 6px;
+.form-id {
+  color: #1890ff;
   font-weight: 500;
-  padding: 2px 8px;
 }
 
-/* 详情模态框样式 */
+.detail-btn {
+  padding: 0;
+  color: #1890ff;
+}
+
+/* 详情弹窗样式 */
 .visit-detail-modal .ant-modal-content {
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .visit-detail-modal .ant-modal-header {
-  background-color: #fff;
-  padding: 20px 24px;
-  border-bottom: none;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.visit-detail-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
 }
 
 .visit-detail-modal .ant-modal-body {
-  padding: 0 24px 24px;
+  padding: 20px;
 }
 
-.visit-detail-modal .ant-modal-footer {
-  border-top: none;
-  padding: 0 24px 24px;
-}
-
-.detail-modal-title {
-  display: flex;
-  align-items: center;
-}
-
-.detail-icon {
-  margin-right: 12px;
-  font-size: 20px;
-  color: #1677ff;
-}
-
-.detail-id-tag {
-  margin-left: 12px;
-  border-radius: 6px;
-  padding: 2px 8px;
-}
-
+/* 详情内容样式 */
 .visit-form-detail {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .detail-section {
-  margin-bottom: 28px;
-}
-
-.detail-section:last-child {
-  margin-bottom: 0;
-}
-
-.detail-section .ant-typography {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0;
-  color: #1677ff;
-}
-
-.detail-section .ant-typography .anticon {
-  margin-right: 8px;
-}
-
-.section-divider {
-  margin: 12px 0 16px;
-  background-color: #f0f7ff;
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 0 4px;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.detail-item .ant-typography-strong {
-  margin-bottom: 6px;
-  color: #8c8c8c;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-}
-
-.detail-item .ant-typography-strong .anticon {
-  margin-right: 6px;
-  font-size: 14px;
-  color: #1677ff;
-}
-
-.detail-item .ant-typography:not(.ant-typography-strong) {
-  font-size: 15px;
-  color: #262626;
-}
-
-.companions-table {
-  margin-top: 16px;
+  background-color: #f9f9f9;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f0f0f0;
 }
 
-.companions-table .ant-table-thead > tr > th {
-  background-color: #f0f7ff;
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-icon {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+.detail-content {
+  padding: 16px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  width: 80px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  flex: 1;
+  color: #333;
+}
+
+/* 随行人员列表样式 */
+.companions-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.companion-item {
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+.companion-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #f5f8ff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.companion-icon {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+.companion-name {
   font-weight: 500;
-  color: #595959;
-  padding: 12px 16px;
 }
 
-.companions-table .ant-table-tbody > tr > td {
-  padding: 12px 16px;
+.companion-details {
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.companions-table .ant-table-tbody > tr:hover > td {
-  background-color: #f0f7ff;
+.companion-detail {
+  display: flex;
+  align-items: center;
+  min-width: 200px;
 }
 
-/* 响应式调整 */
+.detail-icon {
+  margin-right: 8px;
+  color: #1890ff;
+}
+
+/* 响应式布局 */
 @media (max-width: 768px) {
   .visit-form-list-container {
     padding: 12px;
   }
   
-  .detail-grid {
-    grid-template-columns: 1fr;
+  .detail-row {
+    flex-direction: column;
   }
   
-  .visit-detail-modal {
-    max-width: 95vw;
+  .detail-label {
+    width: 100%;
+    margin-bottom: 4px;
   }
   
-  .visit-detail-modal .ant-modal-body {
-    padding: 0 16px 16px;
+  .companion-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .companion-detail {
+    min-width: 100%;
   }
 }

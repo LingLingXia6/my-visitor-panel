@@ -4,46 +4,30 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
-  // 移除 DashboardOutlined 导入
   SettingOutlined,
   LogoutOutlined,
   CustomerServiceOutlined,
-  SoundOutlined,
-  ShoppingCartOutlined,
-  WalletOutlined,
   LockOutlined,
   FormOutlined,
   UnorderedListOutlined
 } from '@ant-design/icons';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie'; 
-
+import './MainLayout.css';
 
 const { Header, Sider, Content } = Layout;
 
 // 将 Header 提取为独立的记忆化组件
 const LayoutHeader = React.memo(({ collapsed, setCollapsed, userMenuItems }) => (
-  <Header style={{ 
-    padding: '0 24px', 
-    background: 'rgba(245, 247, 250, 0.9)',
-    backdropFilter: 'blur(10px)',
-    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  }}>
+  <Header className="main-header">
     {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
       className: 'trigger',
       onClick: () => setCollapsed(!collapsed),
-      style: { color: '#e85d00' }
     })}
     <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-      <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-        <Avatar icon={<UserOutlined />} style={{ marginRight: 8, backgroundColor: '#e85d00' }} />
-        <span style={{ color: '#4d3800' }}>管理员</span>
+      <div className="user-dropdown">
+        <Avatar icon={<UserOutlined />} className="user-avatar" />
+        <span className="user-name">管理员</span>
       </div>
     </Dropdown>
   </Header>
@@ -66,31 +50,21 @@ const MainLayout = () => {
     
     // 路径与菜单键值的映射关系
     const pathToKeyMap = {
-      '/singers': '1',
-      '/songs': '2',
-      '/select-singer-songs': '3',
-      '/orders': '4',
-      '/withdrawals': '5',
-      '/change-password': '6',
-      '/visitor': '7',
-      '/visit-forms': '8'  // 添加新路径映射
+      '/visitor': '0',
+      '/visit-forms': '1',
+      '/visitors': '2',
+      '/change-password': '4',
     };
     
-    // 查找匹配的路径并设置对应的键值
-    const matchedPath = Object.keys(pathToKeyMap).find(path => 
-      pathname.includes(path)
-    );
+  
+    console.log('pathname',pathname);
+  
     
-    if (matchedPath) {
-      setSelectedKey(pathToKeyMap[matchedPath]);
-    }
+    setSelectedKey(pathToKeyMap[pathname]);
   }, [location.pathname]);
-
- 
 
   const handleLogout =  () => {
     try {
-   
        // 清除 Cookie 中的 token
        Cookies.remove('token', { path: '/' });
        message.success('退出登录成功');
@@ -102,7 +76,6 @@ const MainLayout = () => {
 
   // 修改：使用 items 属性替代 Menu.Item 子组件
   const userMenuItems = [
-   
     {
       key: '2',
       icon: <SettingOutlined />,
@@ -117,33 +90,8 @@ const MainLayout = () => {
 
   // 修改：侧边栏菜单项，移除仪表盘选项并重新编号
   // 修改菜单项定义，使用 Link 组件替代点击事件处理函数
+  // 修改菜单项配置
   const sideMenuItems = [
-    // {
-    //   key: '1',
-    //   icon: <CustomerServiceOutlined />,
-    //   label: <Link to="/singers">歌手管理</Link>
-    // },
-    // {
-    //   key: '2',
-    //   icon: <SoundOutlined />,
-    //   label: <Link to="/songs">歌曲管理</Link>
-    // },
-    // {
-    //   key: '3',
-    //   icon: <SoundOutlined />,
-    //   label: <Link to="/select-singer-songs">歌手歌曲管理</Link>
-    // },
-    // {
-    //   key: '4',
-    //   icon: <ShoppingCartOutlined />,
-    //   label: <Link to="/orders">订单管理</Link>
-    // },
-    // {
-    //   key: '5',
-    //   icon: <WalletOutlined />,
-    //   label: <Link to="/withdrawals">提现管理</Link>
-    // },
-    
     {
       key: '0',
       icon: <FormOutlined />,
@@ -154,53 +102,35 @@ const MainLayout = () => {
       icon: <UnorderedListOutlined />,
       label: <Link to="/visit-forms">访客申请单</Link>
     },
-      {
+    {
       key: '2',
-      icon: <UnorderedListOutlined />,
-      label: <Link to="">访客信息</Link>
+      icon: <UserOutlined />,
+      label: <Link to="/visitors">访客信息</Link>,
+      path: '/visitors'
     },
     {
       key: '3',
       icon: <UnorderedListOutlined />,
       label: <Link to="">被拜访人信息</Link>
     },
-
     {
       key: '4',
       icon: <LockOutlined />,
       label: <Link to="/change-password">修改密码</Link>
     },
-  ];
+  ]
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className="main-layout">
       <Sider 
         ref={siderRef}
         trigger={null} 
         collapsible 
         collapsed={collapsed}
-        style={{ 
-          background: '#e0e7f2', // 冷色系侧边栏
-          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
-          overflow: 'auto',
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          borderRight: '1px solid rgba(0, 113, 227, 0.05)'
-        }}
+        className="main-sider"
         width={220}
       >
-        <div className="logo" style={{ 
-          margin: '16px', 
-          height: '32px', 
-          background: 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: collapsed ? 'center' : 'flex-start',
-          color: '#0071e3',
-          fontWeight: 500,
-          fontSize: '18px'
-        }}>
+        <div className={`logo-container ${collapsed ? 'logo-container-collapsed' : 'logo-container-expanded'}`}>
           {!collapsed && <span>访客管理系统</span>}
           {collapsed && <CustomerServiceOutlined />}
         </div>
@@ -209,12 +139,7 @@ const MainLayout = () => {
           theme="light"
           mode="inline"
           selectedKeys={[selectedKey]}
-          style={{ 
-            borderRight: 'none',
-            padding: '8px',
-            background: 'transparent', // 菜单背景透明
-            color: '#2c3e50' // 菜单文字颜色
-          }}
+          className="main-menu"
           items={sideMenuItems}
         />
       </Sider>
@@ -226,13 +151,7 @@ const MainLayout = () => {
           userMenuItems={userMenuItems} 
         />
         
-        <Content style={{ 
-          margin: '24px 16px', 
-          padding: 0,
-          minHeight: 280,
-          borderRadius: '12px',
-          overflow: 'hidden'
-        }}>
+        <Content className="main-content">
           <Outlet />
         </Content>
       </Layout>

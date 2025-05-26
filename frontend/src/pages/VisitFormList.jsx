@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Typography, Tag, Space, Button, message, Tooltip, Modal, Divider } from 'antd';
-import { EyeOutlined, UserOutlined, TeamOutlined, EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined, IdcardOutlined, BankOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Table, Card, Typography, Tag, Space, Button, message, Modal, Divider } from 'antd';
+import { EyeOutlined, UserOutlined, TeamOutlined, EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './VisitFormList.css';
 
@@ -72,25 +72,20 @@ const VisitFormList = () => {
       key: 'id',
       width: 100,
       fixed: 'left',
-      render: (id) => <Tag color="blue" className="id-tag">#{id}</Tag>
+      render: (id) => <span className="form-id">#{id}</span>
     },
     {
       title: '访客姓名',
-      dataIndex: ['Visitor', 'name'],
+      dataIndex: ['mainVisitor', 'name'],
       key: 'visitorName',
       width: 120,
-      render: (name, record) => (
-        <Space>
-          <UserOutlined />
-          <span>{name}</span>
-        </Space>
-      )
     },
     {
       title: '访客单位',
       dataIndex: ['mainVisitor', 'company'],
       key: 'company',
       width: 150,
+      responsive: ['md'],
     },
     {
       title: '被访人',
@@ -103,30 +98,21 @@ const VisitFormList = () => {
       dataIndex: ['host', 'phone'],
       key: 'hostPhone',
       width: 150,
+      responsive: ['lg'],
     },
     {
       title: '来访地点',
       dataIndex: 'location',
       key: 'location',
       width: 150,
-      render: (location) => (
-        <Space>
-          <EnvironmentOutlined />
-          <span>{location}</span>
-        </Space>
-      )
+      responsive: ['md'],
     },
     {
       title: '来访时间',
       dataIndex: 'visit_time',
       key: 'visitTime',
       width: 180,
-      render: (time) => (
-        <Space>
-          <ClockCircleOutlined />
-          <span>{formatDateTime(time)}</span>
-        </Space>
-      )
+      render: (time) => formatDateTime(time)
     },
     {
       title: '随行人数',
@@ -134,32 +120,19 @@ const VisitFormList = () => {
       width: 100,
       render: (_, record) => {
         const companions = record?.attendees ? record.attendees : [];
-        return (
-          <Space>
-            <TeamOutlined />
-            <span>{companions?.length}人</span>
-          </Space>
-        );
+        return companions?.length > 0 ? <Tag color="blue">{companions?.length}人</Tag> : '无';
       }
-    },
-    {
-      title: '申请时间',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      width: 180,
-      render: (time) => formatDateTime(time)
     },
     {
       title: '操作',
       key: 'action',
       fixed: 'right',
-      width: 100,
+      width: 80,
       render: (_, record) => (
         <Button 
-          type="primary" 
-          icon={<EyeOutlined />} 
-          size="small"
+          type="link" 
           onClick={() => showDetail(record)}
+          className="detail-btn"
         >
           详情
         </Button>
@@ -176,87 +149,83 @@ const VisitFormList = () => {
     
     const visitor = currentForm?.mainVisitor ? 
     currentForm.mainVisitor: null;
-console.log("visitor",visitor);
+
     return (
       <Modal
-        title={
-          <div className="detail-modal-title">
-            <FileTextOutlined className="detail-icon" />
-            <span>访问申请单详情</span>
-            <Tag color="blue" className="detail-id-tag">#{currentForm.id}</Tag>
-          </div>
-        }
+        title={`访问申请单 #${currentForm.id}`}
         open={detailVisible}
         onCancel={handleDetailClose}
-        footer={[
-          <Button key="close" onClick={handleDetailClose} type="primary" shape="round">
-            关闭
-          </Button>
-        ]}
-        width={700}
+        footer={null}
+        width={600}
         className="visit-detail-modal"
         centered
         destroyOnClose
       >
         <div className="visit-form-detail">
           <div className="detail-section">
-            <Title level={5}><ClockCircleOutlined /> 基本信息</Title>
-            <Divider className="section-divider" />
-            <div className="detail-grid">
-              <div className="detail-item">
-                <Text strong><FileTextOutlined /> 来访事由</Text>
-                <Text>{currentForm.visit_reason}</Text>
+            <div className="section-header">
+              <ClockCircleOutlined className="section-icon" />
+              <span>基本信息</span>
+            </div>
+            <div className="detail-content">
+              <div className="detail-row">
+                <div className="detail-label">来访事由</div>
+                <div className="detail-value">{currentForm.visit_reason}</div>
               </div>
-              <div className="detail-item">
-                <Text strong><ClockCircleOutlined /> 来访时间</Text>
-                <Text>{formatDateTime(currentForm.visit_time)}</Text>
+              <div className="detail-row">
+                <div className="detail-label">来访时间</div>
+                <div className="detail-value">{formatDateTime(currentForm.visit_time)}</div>
               </div>
-              <div className="detail-item">
-                <Text strong><EnvironmentOutlined /> 来访地点</Text>
-                <Text>{currentForm.location}</Text>
+              <div className="detail-row">
+                <div className="detail-label">来访地点</div>
+                <div className="detail-value">{currentForm.location}</div>
               </div>
-              <div className="detail-item">
-                <Text strong><ClockCircleOutlined /> 申请时间</Text>
-                <Text>{formatDateTime(currentForm.createdAt)}</Text>
+              <div className="detail-row">
+                <div className="detail-label">申请时间</div>
+                <div className="detail-value">{formatDateTime(currentForm.createdAt)}</div>
               </div>
             </div>
           </div>
 
           <div className="detail-section">
-            <Title level={5}><UserOutlined /> 被访人信息</Title>
-            <Divider className="section-divider" />
-            <div className="detail-grid">
-              <div className="detail-item">
-                <Text strong><UserOutlined /> 姓名</Text>
-                <Text>{currentForm?.host?.name}</Text>
+            <div className="section-header">
+              <UserOutlined className="section-icon" />
+              <span>被访人信息</span>
+            </div>
+            <div className="detail-content">
+              <div className="detail-row">
+                <div className="detail-label">姓名</div>
+                <div className="detail-value">{currentForm?.host?.name}</div>
               </div>
-              <div className="detail-item">
-                <Text strong><PhoneOutlined /> 电话</Text>
-                <Text>{currentForm?.host?.phone}</Text>
+              <div className="detail-row">
+                <div className="detail-label">电话</div>
+                <div className="detail-value">{currentForm?.host?.phone}</div>
               </div>
             </div>
           </div>
 
           <div className="detail-section">
-            <Title level={5}><UserOutlined /> 访客信息</Title>
-            <Divider className="section-divider" />
+            <div className="section-header">
+              <UserOutlined className="section-icon" />
+              <span>访客信息</span>
+            </div>
             {visitor && (
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <Text strong><UserOutlined /> 姓名</Text>
-                  <Text>{visitor?.name}</Text>
+              <div className="detail-content">
+                <div className="detail-row">
+                  <div className="detail-label">姓名</div>
+                  <div className="detail-value">{visitor?.name}</div>
                 </div>
-                <div className="detail-item">
-                  <Text strong><PhoneOutlined /> 电话</Text>
-                  <Text>{visitor?.phone}</Text>
+                <div className="detail-row">
+                  <div className="detail-label">电话</div>
+                  <div className="detail-value">{visitor?.phone}</div>
                 </div>
-                <div className="detail-item">
-                  <Text strong><IdcardOutlined /> 身份证</Text>
-                  <Text>{visitor?.id_card}</Text>
+                <div className="detail-row">
+                  <div className="detail-label">身份证</div>
+                  <div className="detail-value">{visitor?.id_card}</div>
                 </div>
-                <div className="detail-item">
-                  <Text strong><BankOutlined /> 单位</Text>
-                  <Text>{visitor?.company}</Text>
+                <div className="detail-row">
+                  <div className="detail-label">单位</div>
+                  <div className="detail-value">{visitor?.company}</div>
                 </div>
               </div>
             )}
@@ -264,50 +233,30 @@ console.log("visitor",visitor);
 
           {companions.length > 0 && (
             <div className="detail-section">
-              <Title level={5}><TeamOutlined /> 随行人员（{companions.length}人）</Title>
-              <Divider className="section-divider" />
-              <Table
-                dataSource={companions}
-                rowKey="id"
-                pagination={false}
-                size="small"
-                className="companions-table"
-                columns={[
-                  {
-                    title: '姓名',
-                    dataIndex: 'name',
-                    key: 'name',
-                    render: (text) => (
-                      <Space>
-                        <UserOutlined style={{ color: '#1677ff' }} />
-                        <span>{text}</span>
-                      </Space>
-                    )
-                  },
-                  {
-                    title: '电话',
-                    dataIndex: 'phone',
-                    key: 'phone',
-                    render: (text) => (
-                      <Space>
-                        <PhoneOutlined style={{ color: '#1677ff' }} />
-                        <span>{text}</span>
-                      </Space>
-                    )
-                  },
-                  {
-                    title: '身份证',
-                    dataIndex: 'id_card',
-                    key: 'idCard',
-                    render: (text) => (
-                      <Space>
-                        <IdcardOutlined style={{ color: '#1677ff' }} />
-                        <span>{text}</span>
-                      </Space>
-                    )
-                  }
-                ]}
-              />
+              <div className="section-header">
+                <TeamOutlined className="section-icon" />
+                <span>随行人员（{companions.length}人）</span>
+              </div>
+              <div className="companions-list">
+                {companions.map((companion, index) => (
+                  <div key={companion.id} className="companion-item">
+                    <div className="companion-header">
+                      <UserOutlined className="companion-icon" />
+                      <span className="companion-name">{companion.name}</span>
+                    </div>
+                    <div className="companion-details">
+                      <div className="companion-detail">
+                        <PhoneOutlined className="detail-icon" />
+                        <span>{companion.phone}</span>
+                      </div>
+                      <div className="companion-detail">
+                        <IdcardOutlined className="detail-icon" />
+                        <span>{companion.id_card}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -318,14 +267,14 @@ console.log("visitor",visitor);
   return (
     <div className="visit-form-list-container">
       <Card 
-        title={
-          <div className="card-title">
-            <FileTextOutlined className="title-icon" />
-            <Title level={4}>访客申请单列表</Title>
-          </div>
-        }
+        title="访客申请单列表"
         extra={
-          <Button type="primary" onClick={fetchVisitForms} loading={loading} shape="round" icon={<ClockCircleOutlined />}>
+          <Button 
+            type="primary" 
+            onClick={fetchVisitForms} 
+            loading={loading} 
+            icon={<ReloadOutlined />}
+          >
             刷新
           </Button>
         }
@@ -337,17 +286,13 @@ console.log("visitor",visitor);
           dataSource={visitForms}
           rowKey="id"
           loading={loading}
-          scroll={{ x: 1300 }}
+          scroll={{ x: 1100 }}
           pagination={{
             defaultPageSize: 10,
             showSizeChanger: true,
-            showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条记录`,
-            size: "small",
-            className: "pagination-custom"
           }}
           className="visit-form-table"
-          rowClassName="table-row"
         />
       </Card>
       {renderDetailModal()}

@@ -10,17 +10,16 @@ import ChangePassword from './pages/ChangePassword';
 import NotFound from './pages/NotFound';
 import VisitorPage from './pages/VisitorPage';
 import VisitFormList from './pages/VisitFormList'; // 导入新组件
+import VisitorList from './pages/VisitorList';
 
-import { UserProvider } from './context/UserContext'; 
-
-// 路由配置常量
-// 修改 APP_ROUTES 常量，添加访客申请单列表路由
+// 修改路由配置
 const APP_ROUTES = [
   // 系统设置路由
   { path: "change-password", element: <ChangePassword />, icon: "Lock" },
   { path: "users", element: <Users />, icon: "Team" },
   { path: "visitor", element: <VisitorPage />, icon: "Form" }, // 访客登记路由
-  { path: "visit-forms", element: <VisitFormList />, icon: "UnorderedList" } // 添加访客申请单列表路由
+  { path: "visit-forms", element: <VisitFormList />, icon: "UnorderedList" } ,// 添加访客申请单列表路由
+  { path: "visitors", element: <VisitorList />, icon: "Team" }
 ];
 
 // 路由守卫组件 - 从 Cookie 获取 token
