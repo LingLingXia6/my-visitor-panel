@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const db = require('../models');
-const { Visitor, Companion, VisitForm, Attendee } = db;
+// const { Visitor, Companion, VisitForm, Attendee } = db;
+const {VisitorsForms,Visitors,FormHostVisitors,Host,User}=db;
 const { Op } = require('sequelize');
-
+console.log('db',db);
 // 获取所有访客
 router.get('/', async (req, res) => {
   try {
@@ -225,23 +226,25 @@ router.get('/:id', async (req, res) => {
 // 获取所有访问表单及相关信息
 router.get('/forms/all', async (req, res) => {
   try {
-    const visitForms = await VisitForm.findAll({
+    const visitorForms = await db.VisitorsForms.findAll({
       include: [
         { 
-          model: Visitor,
-          attributes: ['id', 'name', 'phone', 'id_card', 'company'] 
+          model: db.Visitors,
+          attributes: ['id', 'name', 'phone', 'id_card', 'company']
         },
-        { 
-          model: Attendee,
-          attributes: ['id', 'name', 'role', 'phone', 'id_card'] 
+        {
+          model: db.Host,
+          through: { attributes: [] }, // 隐藏中间表字段
+          attributes: ['id', 'name', 'phone'],
+          distinct: true // 去除重复的 Host 记录
         }
       ],
-      order: [['created_at', 'DESC']] // 按创建时间降序排列
+      distinct: true // 确保主记录也不重复
     });
     
     res.json({
       message: '获取访问表单列表成功',
-      data: visitForms
+      data: visitorForms
     });
   } catch (error) {
     console.error('获取访问表单列表失败:', error);

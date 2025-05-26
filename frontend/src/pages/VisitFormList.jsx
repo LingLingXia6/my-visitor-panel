@@ -24,6 +24,13 @@ const VisitFormList = () => {
       const result = await response.json();
       
       if (result && result.data) {
+       
+        result && result.data.forEach(list => {
+          list.host=list?.Hosts?.[0]||{};
+          list.mainVisitor=list?.Visitors?.find((item)=>item?.FormHostVisitors?.isMinRole===1)
+          list.attendees=list?.Visitors?.filter((item)=>item?.FormHostVisitors?.isMinRole===0)
+        });
+        console.log('获取访问表单列表成功:', result.data);
         setVisitForms(result.data);
       }
       setLoading(false);
@@ -81,19 +88,19 @@ const VisitFormList = () => {
     },
     {
       title: '访客单位',
-      dataIndex: ['Visitor', 'company'],
+      dataIndex: ['mainVisitor', 'company'],
       key: 'company',
       width: 150,
     },
     {
       title: '被访人',
-      dataIndex: 'host_name',
+      dataIndex: ['host', 'name'],
       key: 'hostName',
       width: 120,
     },
     {
       title: '被访人电话',
-      dataIndex: 'host_phone',
+      dataIndex: ['host', 'phone'],
       key: 'hostPhone',
       width: 150,
     },
@@ -126,11 +133,11 @@ const VisitFormList = () => {
       key: 'companionCount',
       width: 100,
       render: (_, record) => {
-        const companions = record.Attendees ? record.Attendees.filter(a => a.role === 'companion') : [];
+        const companions = record?.attendees ? record.attendees : [];
         return (
           <Space>
             <TeamOutlined />
-            <span>{companions.length}人</span>
+            <span>{companions?.length}人</span>
           </Space>
         );
       }
@@ -164,12 +171,12 @@ const VisitFormList = () => {
   const renderDetailModal = () => {
     if (!currentForm) return null;
     
-    const companions = currentForm.Attendees ? 
-      currentForm.Attendees.filter(a => a.role === 'companion') : [];
+    const companions = currentForm?.attendees ? 
+    currentForm?.attendees  : [];
     
-    const visitor = currentForm.Attendees ? 
-      currentForm.Attendees.find(a => a.role === 'visitor') : null;
-
+    const visitor = currentForm?.mainVisitor ? 
+    currentForm.mainVisitor: null;
+console.log("visitor",visitor);
     return (
       <Modal
         title={
@@ -221,11 +228,11 @@ const VisitFormList = () => {
             <div className="detail-grid">
               <div className="detail-item">
                 <Text strong><UserOutlined /> 姓名</Text>
-                <Text>{currentForm.host_name}</Text>
+                <Text>{currentForm?.host?.name}</Text>
               </div>
               <div className="detail-item">
                 <Text strong><PhoneOutlined /> 电话</Text>
-                <Text>{currentForm.host_phone}</Text>
+                <Text>{currentForm?.host?.phone}</Text>
               </div>
             </div>
           </div>
@@ -237,19 +244,19 @@ const VisitFormList = () => {
               <div className="detail-grid">
                 <div className="detail-item">
                   <Text strong><UserOutlined /> 姓名</Text>
-                  <Text>{visitor.name}</Text>
+                  <Text>{visitor?.name}</Text>
                 </div>
                 <div className="detail-item">
                   <Text strong><PhoneOutlined /> 电话</Text>
-                  <Text>{visitor.phone}</Text>
+                  <Text>{visitor?.phone}</Text>
                 </div>
                 <div className="detail-item">
                   <Text strong><IdcardOutlined /> 身份证</Text>
-                  <Text>{visitor.id_card}</Text>
+                  <Text>{visitor?.id_card}</Text>
                 </div>
                 <div className="detail-item">
                   <Text strong><BankOutlined /> 单位</Text>
-                  <Text>{currentForm.Visitor.company}</Text>
+                  <Text>{visitor?.company}</Text>
                 </div>
               </div>
             )}
