@@ -335,27 +335,79 @@ router.get('/forms/all', async (req, res) => {
     }
     
     // 查询条件对象
-    const queryOptions = {
+    let queryOptions = {
       where: formWhereCondition,
       include: [
         { 
           model: db.Visitors,
           attributes: ['id', 'name', 'phone', 'id_card', 'company'],
-          where: Object.keys(visitorWhereCondition).length > 0 ? visitorWhereCondition : undefined
+          // 不在这里直接筛选访客
+          required: false
         },
         {
           model: db.Host,
           through: { attributes: [] }, // 隐藏中间表字段
           attributes: ['id', 'name', 'phone'],
-          where: Object.keys(hostWhereCondition).length > 0 ? hostWhereCondition : undefined,
+          // 不在这里直接筛选被访人
+          required: false,
           distinct: true // 去除重复的 Host 记录
         }
       ],
       distinct: true, // 确保主记录也不重复
-      limit,
-      offset,
       order: [['visit_time', 'DESC']] // 按访问时间降序排序，最新的在前面
     };
+    
+    // 如果有访客姓名或电话筛选条件，使用子查询而不是先获取所有IDs
+    if (visitorName || visitorPhone) {
+    // 使用子查询直接筛选包含特定访客的表单
+    queryOptions.where = {
+    ...queryOptions.where,
+    id: {
+    [Op.in]: db.sequelize.literal(`(
+    SELECT DISTINCT \`FormHostVisitors\`.\`VisitorsFormId\` 
+    FROM \`FormHostVisitors\` 
+    JOIN \`Visitors\` ON \`FormHostVisitors\`.\`visitor_id\` = \`Visitors\`.\`id\` 
+    WHERE ${visitorName ? `\`Visitors\`.\`name\` LIKE '%${visitorName}%'` : '1=1'} 
+    ${visitorPhone ? `AND \`Visitors\`.\`phone\` LIKE '%${visitorPhone}%'` : ''}
+    )`)
+    }
+    };
+    }
+    
+    // 如果有被访人姓名或电话筛选条件，同样使用子查询
+    if (hostName || hostPhone) {
+    const hostSubquery = db.sequelize.literal(`(
+    SELECT DISTINCT \`FormHostVisitors\`.\`VisitorsFormId\` 
+    FROM \`FormHostVisitors\` 
+    JOIN \`Host\` ON \`FormHostVisitors\`.\`host_id\` = \`Host\`.\`id\` 
+    WHERE ${hostName ? `\`Host\`.\`name\` LIKE '%${hostName}%'` : '1=1'} 
+    ${hostPhone ? `AND \`Host\`.\`phone\` LIKE '%${hostPhone}%'` : ''}
+    )`);
+    
+    // 如果已经有表单ID筛选条件，使用交集
+    if (queryOptions.where.id) {
+    queryOptions.where = {
+    ...queryOptions.where,
+    id: {
+    [Op.and]: [
+    { [Op.in]: queryOptions.where.id[Op.in] },
+    { [Op.in]: hostSubquery }
+    ]
+    }
+    };
+    } else {
+    queryOptions.where = {
+    ...queryOptions.where,
+    id: {
+    [Op.in]: hostSubquery
+    }
+    };
+    }
+    }
+    
+    // 添加分页参数
+    queryOptions.limit = limit;
+    queryOptions.offset = offset;
     
     // 获取总记录数和分页数据
     const { count, rows: visitorForms } = await db.VisitorsForms.findAndCountAll(queryOptions);

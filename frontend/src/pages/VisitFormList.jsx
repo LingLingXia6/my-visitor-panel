@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Typography, Tag, Space, Button, message, Modal, Divider } from 'antd';
-import { EyeOutlined, UserOutlined, TeamOutlined, EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Card, Typography, Tag, Space, Button, message, Modal, Divider, Form, Input, DatePicker, Row, Col } from 'antd';
+import { EyeOutlined, UserOutlined, TeamOutlined, EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './VisitFormList.css';
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
 const VisitFormList = () => {
   const [loading, setLoading] = useState(true);
@@ -18,16 +19,38 @@ const VisitFormList = () => {
     totalPages: 0,
     hasNextPage: false
   });
+  const [filterForm] = Form.useForm();
+  const [filters, setFilters] = useState({
+    visitorName: '',
+    visitorPhone: '',
+    hostName: '',
+    hostPhone: '',
+    startTime: '',
+    endTime: ''
+  });
 
   useEffect(() => {
     fetchVisitForms();
-  }, [pagination.current, pagination.pageSize]);
+  }, [pagination.current, pagination.pageSize, filters]);
 
   const fetchVisitForms = async () => {
     try {
       setLoading(true);
+      
+      // 构建查询参数
+      const queryParams = new URLSearchParams();
+      queryParams.append('page', pagination.current);
+      queryParams.append('pageSize', pagination.pageSize);
+      
+      if (filters.visitorName) queryParams.append('visitorName', filters.visitorName);
+      if (filters.visitorPhone) queryParams.append('visitorPhone', filters.visitorPhone);
+      if (filters.hostName) queryParams.append('hostName', filters.hostName);
+      if (filters.hostPhone) queryParams.append('hostPhone', filters.hostPhone);
+      if (filters.startTime) queryParams.append('startTime', filters.startTime);
+      if (filters.endTime) queryParams.append('endTime', filters.endTime);
+      
       // 使用 fetch 直接获取数据，添加分页参数
-      const response = await fetch(`http://localhost:8082/visitors/forms/all?page=${pagination.current}&pageSize=${pagination.pageSize}`);
+      const response = await fetch(`http://localhost:8082/visitors/forms/all?${queryParams.toString()}`);
       const result = await response.json();
       
       if (result && result.data) {
@@ -66,6 +89,51 @@ const VisitFormList = () => {
       ...prev,
       current: paginationParams.current,
       pageSize: paginationParams.pageSize
+    }));
+  };
+
+  // 处理筛选表单提交
+  const handleSearch = (values) => {
+    // 处理日期范围
+    let startTime = '';
+    let endTime = '';
+    
+    if (values.dateRange && values.dateRange.length === 2) {
+      startTime = values.dateRange[0].format('YYYY-MM-DD 00:00:00');
+      endTime = values.dateRange[1].format('YYYY-MM-DD 23:59:59');
+    }
+    
+    // 更新筛选条件
+    setFilters({
+      visitorName: values.visitorName || '',
+      visitorPhone: values.visitorPhone || '',
+      hostName: values.hostName || '',
+      hostPhone: values.hostPhone || '',
+      startTime,
+      endTime
+    });
+    
+    // 重置到第一页
+    setPagination(prev => ({
+      ...prev,
+      current: 1
+    }));
+  };
+
+  // 重置筛选条件
+  const handleReset = () => {
+    filterForm.resetFields();
+    setFilters({
+      visitorName: '',
+      visitorPhone: '',
+      hostName: '',
+      hostPhone: '',
+      startTime: '',
+      endTime: ''
+    });
+    setPagination(prev => ({
+      ...prev,
+      current: 1
     }));
   };
 
@@ -312,6 +380,57 @@ const VisitFormList = () => {
         className="visit-form-card"
         bordered={false}
       >
+        {/* 筛选表单 */}
+        <div className="filter-section">
+          <Form
+            form={filterForm}
+            layout="inline"
+            onFinish={handleSearch}
+            className="filter-form"
+          >
+            <Row gutter={[16, 16]} style={{ width: '100%' }}>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="visitorName" label="访客姓名">
+                  <Input placeholder="请输入访客姓名" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="visitorPhone" label="访客电话">
+                  <Input placeholder="请输入访客电话" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="hostName" label="被访人姓名">
+                  <Input placeholder="请输入被访人姓名" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="hostPhone" label="被访人电话">
+                  <Input placeholder="请输入被访人电话" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <Form.Item name="dateRange" label="开始时间">
+                  <RangePicker 
+                    style={{ width: '100%' }} 
+                    placeholder={['开始时间', '结束时间']}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Form.Item>
+                  <Space>
+                    <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+                      搜索
+                    </Button>
+                    <Button onClick={handleReset}>重置</Button>
+                  </Space>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+
         <Table
           columns={columns}
           dataSource={visitForms}
