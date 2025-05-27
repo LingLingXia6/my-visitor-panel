@@ -291,3 +291,23 @@
 .visit-card:last-child {
   margin-bottom: 0;
 }
+
+
+/* 添加筛选区域样式 */
+.filter-section {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.filter-form {
+  width: 100%;
+}
+
+/* 确保在小屏幕上表单项垂直排列 */
+@media (max-width: 576px) {
+  .filter-form .ant-form-item {
+    margin-bottom: 12px;
+  }
+}

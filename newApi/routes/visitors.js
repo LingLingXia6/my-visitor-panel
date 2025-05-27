@@ -9,7 +9,12 @@ const { Op } = require('sequelize');
 router.get('/', async (req, res) => {
   try {
     // 获取查询参数
-    const { name, phone, startTime, endTime } = req.query;
+    const { name, phone, startTime, endTime, page = 1, pageSize = 10 } = req.query;
+    
+    // 将页码和每页数量转换为数字
+    const currentPage = parseInt(page, 10);
+    const limit = parseInt(pageSize, 10);
+    const offset = (currentPage - 1) * limit;
     
     // 构建查询条件
     const whereCondition = {};
@@ -44,7 +49,8 @@ router.get('/', async (req, res) => {
       };
     }
     
-    const visitors = await Visitors.findAll({
+    // 查询条件对象
+    const queryOptions = {
       where: whereCondition,
       include: [
         { 
@@ -57,10 +63,30 @@ router.get('/', async (req, res) => {
           distinct: true 
         }
       ],
-      distinct: true
-    });
+      distinct: true,
+      limit,
+      offset
+    };
     
-    res.json(visitors);
+    // 获取总记录数
+    const { count, rows: visitors } = await Visitors.findAndCountAll(queryOptions);
+    
+    // 计算总页数
+    const totalPages = Math.ceil(count / limit);
+    
+    // 判断是否有下一页
+    const hasNextPage = currentPage < totalPages;
+    
+    res.json({
+      data: visitors,
+      pagination: {
+        total: count,
+        currentPage,
+        pageSize: limit,
+        totalPages,
+        hasNextPage
+      }
+    });
   } catch (error) {
     console.error('获取访客列表失败:', error);
     res.status(500).json({ message: '获取访客列表失败', error: error.message });

@@ -1,33 +1,124 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Typography, Tag, Space, Button, Modal, Divider, Collapse, Empty } from 'antd';
-import { UserOutlined, PhoneOutlined, IdcardOutlined, ClockCircleOutlined, EnvironmentOutlined, BankOutlined, ReloadOutlined, CalendarOutlined } from '@ant-design/icons';
+import { Table, Card, Typography, Tag, Space, Button, Modal, Divider, Collapse, Empty, Input, DatePicker, Form, Row, Col } from 'antd';
+import { UserOutlined, PhoneOutlined, IdcardOutlined, ClockCircleOutlined, EnvironmentOutlined, BankOutlined, ReloadOutlined, CalendarOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './VisitorList.css';
+import moment from 'moment';
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
 const VisitorList = () => {
   const [loading, setLoading] = useState(true);
   const [visitors, setVisitors] = useState([]);
   const [selectedVisitor, setSelectedVisitor] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
+  const [filterForm] = Form.useForm();
+  const [filters, setFilters] = useState({
+    name: '',
+    phone: '',
+    startTime: '',
+    endTime: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchVisitors();
-  }, []);
+  }, [pagination.current, pagination.pageSize, filters]);
 
   const fetchVisitors = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8082/visitors');
-      const data = await response.json();
-      setVisitors(data);
+      
+      // 构建查询参数
+      const queryParams = new URLSearchParams();
+      queryParams.append('page', pagination.current);
+      queryParams.append('pageSize', pagination.pageSize);
+      
+      if (filters.name) queryParams.append('name', filters.name);
+      if (filters.phone) queryParams.append('phone', filters.phone);
+      if (filters.startTime) queryParams.append('startTime', filters.startTime);
+      if (filters.endTime) queryParams.append('endTime', filters.endTime);
+      
+      const response = await fetch(`http://localhost:8082/visitors?${queryParams.toString()}`);
+      const result = await response.json();
+      
+      // Handle the new response format with pagination
+      if (Array.isArray(result)) {
+        // Old format (just an array of visitors)
+        setVisitors(result);
+        setPagination(prev => ({ ...prev, total: result.length }));
+      } else if (result.data && Array.isArray(result.data)) {
+        // New format with pagination info
+        setVisitors(result.data);
+        setPagination(prev => ({
+          ...prev,
+          current: result.pagination?.currentPage || 1,
+          total: result.pagination?.total || 0
+        }));
+      } else {
+        // Fallback for unexpected format
+        console.error('Unexpected data format:', result);
+        setVisitors([]);
+      }
+      
       setLoading(false);
     } catch (error) {
       console.error('获取访客列表失败:', error);
       setLoading(false);
     }
+  };
+
+  const handleTableChange = (pagination) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize
+    });
+  };
+
+  const handleSearch = (values) => {
+    // 处理日期范围
+    let startTime = '';
+    let endTime = '';
+    
+    if (values.dateRange && values.dateRange.length === 2) {
+      startTime = values.dateRange[0].format('YYYY-MM-DD 00:00:00');
+      endTime = values.dateRange[1].format('YYYY-MM-DD 23:59:59');
+    }
+    
+    // 更新筛选条件
+    setFilters({
+      name: values.name || '',
+      phone: values.phone || '',
+      startTime,
+      endTime
+    });
+    
+    // 重置到第一页
+    setPagination(prev => ({
+      ...prev,
+      current: 1
+    }));
+  };
+
+  const handleReset = () => {
+    filterForm.resetFields();
+    setFilters({
+      name: '',
+      phone: '',
+      startTime: '',
+      endTime: ''
+    });
+    setPagination(prev => ({
+      ...prev,
+      current: 1
+    }));
   };
 
   const columns = [
@@ -208,7 +299,10 @@ const VisitorList = () => {
           <Button 
             type="primary" 
             icon={<ReloadOutlined />}
-            onClick={fetchVisitors} 
+            onClick={() => {
+              setPagination(prev => ({ ...prev, current: 1 }));
+              fetchVisitors();
+            }} 
             loading={loading}
             size="middle"
           >
@@ -217,16 +311,60 @@ const VisitorList = () => {
         }
         bordered={false}
       >
+        {/* 筛选表单 */}
+        <div className="filter-section">
+          <Form
+            form={filterForm}
+            layout="inline"
+            onFinish={handleSearch}
+            className="filter-form"
+          >
+            <Row gutter={[16, 16]} style={{ width: '100%' }}>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="name" label="访客姓名">
+                  <Input placeholder="请输入访客姓名" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6} lg={6}>
+                <Form.Item name="phone" label="访客电话">
+                  <Input placeholder="请输入访客电话" allowClear />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={8}>
+                <Form.Item name="dateRange" label="开始时间">
+                  <RangePicker 
+                    style={{ width: '100%' }} 
+                    placeholder={['开始时间', '结束时间']}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={4} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Form.Item>
+                  <Space>
+                    <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+                      搜索
+                    </Button>
+                    <Button onClick={handleReset}>重置</Button>
+                  </Space>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+
         <Table
           columns={columns}
           dataSource={visitors}
           rowKey="id"
           loading={loading}
           pagination={{
-            pageSize: 10,
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
             showSizeChanger: true,
             showTotal: total => `共 ${total} 位访客`
           }}
+          onChange={handleTableChange}
           className="visitor-table"
           size="middle"
         />
