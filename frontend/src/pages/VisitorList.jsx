@@ -316,29 +316,24 @@ const VisitorList = () => {
                           header={`${group.year} 年 (${group.count}次)`} 
                           key={group.year}
                         >
-                          {group.forms.map(form => (
-                            <div key={form.id} className="visit-item">
-                              <div className="visit-item-header">
-                                <div className="visit-date">
-                                  <ClockCircleOutlined /> {new Date(form.visit_time).toLocaleDateString()}
-                                </div>
-                                <div className="visit-id">#{form.id}</div>
+                          {group.forms.map(form => {
+                            // 找到当前表单对应的被访人
+                            const host = selectedVisitor?.Hosts?.find(h => h.id === form.FormHostVisitors?.host_id);
+                            return (
+                              <div key={form.id} className="apple-timeline-row">
+                                <ClockCircleOutlined className="apple-timeline-icon" />
+                                <span className="apple-timeline-date">{new Date(form.visit_time).toLocaleDateString()}</span>
+                                <EnvironmentOutlined className="apple-timeline-icon" />
+                                <span className="apple-timeline-location">{form.location}</span>
+                                <UserOutlined className="apple-timeline-icon" />
+                                <span className="apple-timeline-host">
+                                  {host ? `${host.name} (${host.phone})` : ''}
+                                </span>
+                                <span className="apple-timeline-reason">{form.visit_reason}</span>
+                                <span className="apple-timeline-id">#{form.id}</span>
                               </div>
-                              <div className="visit-item-content">
-                                <div className="visit-location">
-                                  <EnvironmentOutlined />
-                                  <span>{form.location}</span>
-                                </div>
-                                <div className="visit-host">
-                                  <UserOutlined />
-                                  <span>{selectedVisitor?.Hosts?.[0]?.name} ({selectedVisitor?.Hosts?.[0]?.phone})</span>
-                                </div>
-                                <div className="visit-reason">
-                                  <span>{form.visit_reason}</span>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </Collapse.Panel>
                       </Collapse>
                     </div>
@@ -363,48 +358,37 @@ const VisitorList = () => {
               {hostGroups.length > 0 ? (
                 <div className="host-groups">
                   {hostGroups.map(host => (
-                    <div key={host.id} className="visit-year-group">
-                      <div
-                        className="year-collapse ant-collapse"
-                        style={{ marginBottom: 4, border: 'none', background: 'transparent' }}
+                    <div key={host.id} className="host-group">
+                      <div 
+                        className="host-header" 
+                        onClick={() => toggleHostExpand(host.id)}
                       >
-                        <div
-                          className="ant-collapse-header"
-                          style={{ cursor: 'pointer', fontWeight: 500, padding: '10px 16px', background: '#f5f5f5', borderRadius: 6, color: '#333', display: 'flex', alignItems: 'center' }}
-                          onClick={() => toggleHostExpand(host.id)}
-                        >
-                          <UserOutlined style={{ color: '#1890ff', marginRight: 8, fontSize: 16 }} />
-                          <span>{host.name}</span>
-                          <span style={{ color: '#999', marginLeft: 8 }}>{host.phone}</span>
-                          <span style={{ marginLeft: 'auto', color: '#1890ff', fontSize: 13 }}>共访问 {host.count} 次</span>
-                          <span style={{ marginLeft: 12, fontSize: 12, color: '#bbb' }}>
-                            {expandedHosts[host.id] ? '▲' : '▼'}
-                          </span>
-                        </div>
-                        {expandedHosts[host.id] && (
-                          <div className="year-collapse ant-collapse-content-box" style={{ padding: '8px 0' }}>
-                            {host.visits.map(visit => (
-                              <div key={visit.id} className="visit-item">
-                                <div className="visit-item-header">
-                                  <div className="visit-date">
-                                    <ClockCircleOutlined style={{ fontSize: 15, color: '#1890ff', marginRight: 6 }} />
-                                    <span>{visit.date.toLocaleDateString()}</span>
-                                  </div>
-                                </div>
-                                <div className="visit-item-content">
-                                  <div className="visit-location">
-                                    <EnvironmentOutlined style={{ fontSize: 15, color: '#52c41a', marginRight: 6 }} />
-                                    <span>{visit.location}</span>
-                                  </div>
-                                  <div className="visit-reason">
-                                    <span>{visit.reason}</span>
-                                  </div>
+                        <UserOutlined style={{ color: '#1890ff', marginRight: 8, fontSize: 16 }} />
+                        <span className="host-name">{host.name}</span>
+                        <span className="host-phone">{host.phone}</span>
+                        <span className="host-count">共访问 {host.count} 次</span>
+                        <span style={{ marginLeft: 12, fontSize: 12, color: '#bbb' }}>
+                          {expandedHosts[host.id] ? '▲' : '▼'}
+                        </span>
+                      </div>
+                      {expandedHosts[host.id] && (
+                        <div className="timeline-container timeline-compact">
+                          {host.visits.map(visit => (
+                            <div key={visit.id} className="timeline-item timeline-item-compact">
+                              <div className="timeline-dot"></div>
+                              <div className="timeline-content timeline-content-compact">
+                                <div className="timeline-row">
+                                  <ClockCircleOutlined className="timeline-icon" />
+                                  <span className="timeline-date">{visit.date.toLocaleDateString()}</span>
+                                  <EnvironmentOutlined className="timeline-icon" style={{ marginLeft: 16 }} />
+                                  <span className="timeline-location">{visit.location}</span>
+                                  <span className="timeline-reason">· {visit.reason}</span>
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
