@@ -11,27 +11,46 @@ const VisitFormList = () => {
   const [visitForms, setVisitForms] = useState([]);
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentForm, setCurrentForm] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false
+  });
 
   useEffect(() => {
     fetchVisitForms();
-  }, []);
+  }, [pagination.current, pagination.pageSize]);
 
   const fetchVisitForms = async () => {
     try {
       setLoading(true);
-      // 使用 fetch 直接获取数据
-      const response = await fetch('http://localhost:8082/visitors/forms/all');
+      // 使用 fetch 直接获取数据，添加分页参数
+      const response = await fetch(`http://localhost:8082/visitors/forms/all?page=${pagination.current}&pageSize=${pagination.pageSize}`);
       const result = await response.json();
       
       if (result && result.data) {
-       
-        result && result.data.forEach(list => {
-          list.host=list?.Hosts?.[0]||{};
-          list.mainVisitor=list?.Visitors?.find((item)=>item?.FormHostVisitors?.isMinRole===1)
-          list.attendees=list?.Visitors?.filter((item)=>item?.FormHostVisitors?.isMinRole===0)
+        // 处理数据
+        result.data.forEach(list => {
+          list.host = list?.Hosts?.[0] || {};
+          list.mainVisitor = list?.Visitors?.find((item) => item?.FormHostVisitors?.isMinRole === 1);
+          list.attendees = list?.Visitors?.filter((item) => item?.FormHostVisitors?.isMinRole === 0);
         });
+        
         console.log('获取访问表单列表成功:', result.data);
         setVisitForms(result.data);
+        
+        // 更新分页信息
+        if (result.pagination) {
+          setPagination({
+            current: result.pagination.currentPage,
+            pageSize: result.pagination.pageSize,
+            total: result.pagination.total,
+            totalPages: result.pagination.totalPages,
+            hasNextPage: result.pagination.hasNextPage
+          });
+        }
       }
       setLoading(false);
     } catch (error) {
@@ -39,6 +58,15 @@ const VisitFormList = () => {
       message.error('获取访问表单列表失败');
       setLoading(false);
     }
+  };
+
+  // 处理分页变化
+  const handleTableChange = (paginationParams) => {
+    setPagination(prev => ({
+      ...prev,
+      current: paginationParams.current,
+      pageSize: paginationParams.pageSize
+    }));
   };
 
   const showDetail = (record) => {
@@ -271,7 +299,10 @@ const VisitFormList = () => {
         extra={
           <Button 
             type="primary" 
-            onClick={fetchVisitForms} 
+            onClick={() => {
+              setPagination(prev => ({ ...prev, current: 1 }));
+              fetchVisitForms();
+            }} 
             loading={loading} 
             icon={<ReloadOutlined />}
           >
@@ -288,10 +319,20 @@ const VisitFormList = () => {
           loading={loading}
           scroll={{ x: 1100 }}
           pagination={{
-            defaultPageSize: 10,
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
             showSizeChanger: true,
             showTotal: (total) => `共 ${total} 条记录`,
+            onChange: (page, pageSize) => {
+              setPagination(prev => ({
+                ...prev,
+                current: page,
+                pageSize: pageSize
+              }));
+            }
           }}
+          onChange={handleTableChange}
           className="visit-form-table"
         />
       </Card>

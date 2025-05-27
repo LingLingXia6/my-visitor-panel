@@ -271,25 +271,111 @@ router.get('/:id', async (req, res) => {
 // 获取所有访问表单及相关信息
 router.get('/forms/all', async (req, res) => {
   try {
-    const visitorForms = await db.VisitorsForms.findAll({
+    // 获取查询参数
+    const { 
+      visitorName, 
+      visitorPhone, 
+      hostName, 
+      hostPhone, 
+      startTime, 
+      endTime, 
+      page = 1, 
+      pageSize = 10 
+    } = req.query;
+    
+    // 将页码和每页数量转换为数字
+    const currentPage = parseInt(page, 10);
+    const limit = parseInt(pageSize, 10);
+    const offset = (currentPage - 1) * limit;
+    
+    // 构建访问表单时间查询条件
+    const formWhereCondition = {};
+    
+    // 如果提供了开始时间和结束时间，添加时间范围搜索条件
+    if (startTime && endTime) {
+      formWhereCondition.visit_time = {
+        [Op.between]: [new Date(startTime), new Date(endTime)]
+      };
+    } else if (startTime) {
+      // 只有开始时间
+      formWhereCondition.visit_time = {
+        [Op.gte]: new Date(startTime)
+      };
+    } else if (endTime) {
+      // 只有结束时间
+      formWhereCondition.visit_time = {
+        [Op.lte]: new Date(endTime)
+      };
+    }
+    
+    // 构建访客查询条件
+    const visitorWhereCondition = {};
+    
+    // 如果提供了访客姓名，添加访客姓名搜索条件
+    if (visitorName) {
+      visitorWhereCondition.name = { [Op.like]: `%${visitorName}%` };
+    }
+    
+    // 如果提供了访客电话，添加访客电话搜索条件
+    if (visitorPhone) {
+      visitorWhereCondition.phone = { [Op.like]: `%${visitorPhone}%` };
+    }
+    
+    // 构建被访人查询条件
+    const hostWhereCondition = {};
+    
+    // 如果提供了被访人姓名，添加被访人姓名搜索条件
+    if (hostName) {
+      hostWhereCondition.name = { [Op.like]: `%${hostName}%` };
+    }
+    
+    // 如果提供了被访人电话，添加被访人电话搜索条件
+    if (hostPhone) {
+      hostWhereCondition.phone = { [Op.like]: `%${hostPhone}%` };
+    }
+    
+    // 查询条件对象
+    const queryOptions = {
+      where: formWhereCondition,
       include: [
         { 
           model: db.Visitors,
-          attributes: ['id', 'name', 'phone', 'id_card', 'company']
+          attributes: ['id', 'name', 'phone', 'id_card', 'company'],
+          where: Object.keys(visitorWhereCondition).length > 0 ? visitorWhereCondition : undefined
         },
         {
           model: db.Host,
           through: { attributes: [] }, // 隐藏中间表字段
           attributes: ['id', 'name', 'phone'],
+          where: Object.keys(hostWhereCondition).length > 0 ? hostWhereCondition : undefined,
           distinct: true // 去除重复的 Host 记录
         }
       ],
-      distinct: true // 确保主记录也不重复
-    });
+      distinct: true, // 确保主记录也不重复
+      limit,
+      offset,
+      order: [['visit_time', 'DESC']] // 按访问时间降序排序，最新的在前面
+    };
+    
+    // 获取总记录数和分页数据
+    const { count, rows: visitorForms } = await db.VisitorsForms.findAndCountAll(queryOptions);
+    
+    // 计算总页数
+    const totalPages = Math.ceil(count / limit);
+    
+    // 判断是否有下一页
+    const hasNextPage = currentPage < totalPages;
     
     res.json({
       message: '获取访问表单列表成功',
-      data: visitorForms
+      data: visitorForms,
+      pagination: {
+        total: count,
+        currentPage,
+        pageSize: limit,
+        totalPages,
+        hasNextPage
+      }
     });
   } catch (error) {
     console.error('获取访问表单列表失败:', error);
