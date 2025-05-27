@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 const db = require('../models');
 const {VisitorsForms,Visitors,FormHostVisitors,Host,User}=db;
 const { Op } = require('sequelize');
-console.log('db',db);
+
 // 获取所有访客
 router.get('/', async (req, res) => {
   try {
@@ -51,35 +51,32 @@ router.post('/', [
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-console.log('db.Host',db.Host);
+
   // 开始事务
   const t = await db.sequelize.transaction();
 
   try {
     const { visitor, visitForm, hosts, companions } = req.body;
   
-    // 1. 创建访客记录 - 移除不存在的 company 字段
+    // 1. 创建访客记录 
     const visitorData = {
       name: visitor.name,
       phone: visitor.phone,
       id_card: visitor.id_card,
       company: visitor.company // 这里添加了 company 字段，因为它是可选的，所以需要在这里添加
     };
-    let newVisitor=null;
-    console.log('visitorData',visitorData);
-    // 先查询是否有重复的身份证号
-    const existingVisitor = await db.Visitors.findOne({
+    //创建访客信息，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: visitorData
+    const [newVisitor,created]=await db.Visitors.findOrCreate({
       where: { id_card: visitor.id_card },
+      defaults: {
+       ...visitorData
+      },
       transaction: t
     });
-    if (existingVisitor) {
-      newVisitor=existingVisitor;
-      // 更新访客信息
-      await existingVisitor.update(visitorData, { transaction: t });
-    }else{
-      newVisitor = await db.Visitors.create(visitorData, { transaction: t });
+    // 如果已经创建，然后更新访客信息
+    if(created){
+      await db.Visitors.update(visitorData, { transaction: t });
     }
-    
   
     // 2. 创建访问表单记录
     const newVisitForm = await db.VisitorsForms.create({
@@ -87,89 +84,67 @@ console.log('db.Host',db.Host);
     }, { transaction: t });
     
     // 3. 处理被访人信息
-    let mainHost = null;
-    if (hosts && hosts.length > 0) {
-      // 查找或创建主被访人
-      console.log('db.Host',db.Host);
-      console.log('hosts[0].phone',hosts[0].phone);
-      // 修改顶部导入语句，添加 Host 模型
-      const { Visitor, Companion, VisitForm, Attendee, Host } = db;
-      
-      // 在事务代码段中，修改查询语句
-      const [hostRecord, created] = await Host.findOrCreate({
-        where: { phone: hosts[0].phone },
-        defaults: {
-          name: hosts[0].name,
-          phone: hosts[0].phone
-        },
-        transaction: t
-      });
-      console.log('hostRecord111',hostRecord);
-      mainHost = hostRecord;
-      
-      // 创建主被访人与表单的关联记录
-      await db.FormHostVisitors.create({
-        VisitorsFormId: newVisitForm.id,
-        host_id: mainHost.id,
-        visitor_id: newVisitor.id,
-        isMinRole: 1 // 主访客
-      }, { transaction: t });
-      
-      // 处理其他被访人（如果有）
-      for (let i = 1; i < hosts.length; i++) {
-        const [otherHost, created] = await db.Host.findOrCreate({
-          where: { phone: hosts[i].phone },
-          defaults: {
-            name: hosts[i].name,
-            phone: hosts[i].phone
-          },
-          transaction: t
-        });
-       
-        // 创建其他被访人与表单的关联记录
-        await db.FormHostVisitors.create({
-          VisitorsFormId: newVisitForm.id,
-          host_id: otherHost.id,
-          visitor_id: newVisitor.id,
-          isMinRole: 0 // 非主访客
-        }, { transaction: t });
-      }
-    }
-  
+    const hostData={ 
+      name: hosts[0].name,
+      phone: hosts[0].phone
+    };
+    
+  // 创建被访问人信息，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: hostData
+  const [mainHost, hasHostCreated] = await db.Host.findOrCreate({
+    where: { phone: hosts[0].phone },
+    defaults: {
+      ...hostData
+    },
+    transaction: t
+  });
+  if(hasHostCreated){
+    await db.Host.update(hostData, { transaction: t });
+  }
+  // 创建主visitor与中间表的关联记录
+    await db.FormHostVisitors.create({
+      VisitorsFormId: newVisitForm.id,
+      host_id: mainHost.id,
+      visitor_id: newVisitor.id,
+      isMinRole: 1 // 主访客
+    }, { transaction: t });
+
+
     // 4. 创建随行人记录并关联到表单
     const newCompanions = [];
     if (companions && companions.length > 0) {
       for (const companion of companions) {
-        // 创建随行人作为访客 - 移除不存在的 company 字段
-        const newCompanionVisitor = await db.Visitors.create({
-          name: companion.name,
-          phone: companion.phone,
-          id_card: companion.id_card,
-          company: visitor.company
-          // 不包含 company 字段
-        }, { transaction: t });
-        
-        newCompanions.push(newCompanionVisitor);
+        // 创建随行人作为访客 
+        const companionData={
+          name: companion?.name,
+          phone: companion?.phone,
+          id_card: companion?.id_card,
+          company: visitor?.company
+        };
+        // 创建随行人，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: companion
+        const [newCompanion, hasCompanionCreated] = await db.Visitors.findOrCreate({
+          where: { phone: companion.phone },
+          defaults: {
+            ...companionData
+          },
+          transaction: t
+        });
+        if(hasCompanionCreated){
+          await db.Visitors.update(companionData, { transaction: t });
+        }
+        newCompanions.push(newCompanion);
         
         // 创建随行人与表单和被访人的关联
         if (mainHost) {
           await db.FormHostVisitors.create({
-            VisitorsFormId: newVisitForm.id,
-            host_id: mainHost.id,
-            visitor_id: newCompanionVisitor.id,
+            VisitorsFormId: newVisitForm?.id,
+            host_id: mainHost?.id,
+            visitor_id: newCompanion?.id,
             isMinRole: 0 // 随行人
           }, { transaction: t });
         }
       }
     }
-    // test
-    const visitorForms=await db.VisitorsForms.findAll({
-      include: [
-        { model: db.Visitors},
-        { model: db.Host},
-      ]
-    });
-    console.log();
+    
     // 提交事务
     await t.commit();
     
@@ -179,7 +154,6 @@ console.log('db.Host',db.Host);
       visitForm: newVisitForm,
       hosts: mainHost ? [mainHost] : [],
       companions: newCompanions,
-      data:visitorForms
     };
     
     res.status(201).json({
