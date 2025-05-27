@@ -363,35 +363,48 @@ const VisitorList = () => {
               {hostGroups.length > 0 ? (
                 <div className="host-groups">
                   {hostGroups.map(host => (
-                    <div key={host.id} className="host-group">
-                      <div 
-                        className="host-header" 
-                        onClick={() => toggleHostExpand(host.id)}
+                    <div key={host.id} className="visit-year-group">
+                      <div
+                        className="year-collapse ant-collapse"
+                        style={{ marginBottom: 4, border: 'none', background: 'transparent' }}
                       >
-                        <span className="host-name">{host.name}</span>
-                        <span className="host-phone">{host.phone}</span>
-                        <span className="host-count">共访问 {host.count} 次</span>
-                      </div>
-                      
-                      {expandedHosts[host.id] && (
-                        <div className="timeline-container">
-                          {host.visits.map(visit => (
-                            <div key={visit.id} className="timeline-item">
-                              <div className="timeline-dot"></div>
-                              <div className="timeline-content">
-                                <div className="timeline-date">
-                                  <ClockCircleOutlined className="timeline-icon" /> {visit.date.toLocaleDateString()}
+                        <div
+                          className="ant-collapse-header"
+                          style={{ cursor: 'pointer', fontWeight: 500, padding: '10px 16px', background: '#f5f5f5', borderRadius: 6, color: '#333', display: 'flex', alignItems: 'center' }}
+                          onClick={() => toggleHostExpand(host.id)}
+                        >
+                          <UserOutlined style={{ color: '#1890ff', marginRight: 8, fontSize: 16 }} />
+                          <span>{host.name}</span>
+                          <span style={{ color: '#999', marginLeft: 8 }}>{host.phone}</span>
+                          <span style={{ marginLeft: 'auto', color: '#1890ff', fontSize: 13 }}>共访问 {host.count} 次</span>
+                          <span style={{ marginLeft: 12, fontSize: 12, color: '#bbb' }}>
+                            {expandedHosts[host.id] ? '▲' : '▼'}
+                          </span>
+                        </div>
+                        {expandedHosts[host.id] && (
+                          <div className="year-collapse ant-collapse-content-box" style={{ padding: '8px 0' }}>
+                            {host.visits.map(visit => (
+                              <div key={visit.id} className="visit-item">
+                                <div className="visit-item-header">
+                                  <div className="visit-date">
+                                    <ClockCircleOutlined style={{ fontSize: 15, color: '#1890ff', marginRight: 6 }} />
+                                    <span>{visit.date.toLocaleDateString()}</span>
+                                  </div>
                                 </div>
-                                <div className="timeline-info">
-                                  <EnvironmentOutlined className="timeline-icon" />
-                                  <span>{visit.location}</span>
-                                  <span className="timeline-reason">· {visit.reason}</span>
+                                <div className="visit-item-content">
+                                  <div className="visit-location">
+                                    <EnvironmentOutlined style={{ fontSize: 15, color: '#52c41a', marginRight: 6 }} />
+                                    <span>{visit.location}</span>
+                                  </div>
+                                  <div className="visit-reason">
+                                    <span>{visit.reason}</span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
