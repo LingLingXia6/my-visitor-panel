@@ -8,13 +8,58 @@ const { Op } = require('sequelize');
 // 获取所有访客
 router.get('/', async (req, res) => {
   try {
+    // 获取查询参数
+    const { name, phone, startTime, endTime } = req.query;
+    
+    // 构建查询条件
+    const whereCondition = {};
+    
+    // 如果提供了姓名，添加姓名搜索条件
+    if (name) {
+      whereCondition.name = { [Op.like]: `%${name}%` };
+    }
+    
+    // 如果提供了电话，添加电话搜索条件
+    if (phone) {
+      whereCondition.phone = { [Op.like]: `%${phone}%` };
+    }
+    
+    // 构建访问时间查询条件（用于关联查询）
+    const visitFormWhereCondition = {};
+    
+    // 如果提供了开始时间和结束时间，添加时间范围搜索条件
+    if (startTime && endTime) {
+      visitFormWhereCondition.visit_time = {
+        [Op.between]: [new Date(startTime), new Date(endTime)]
+      };
+    } else if (startTime) {
+      // 只有开始时间
+      visitFormWhereCondition.visit_time = {
+        [Op.gte]: new Date(startTime)
+      };
+    } else if (endTime) {
+      // 只有结束时间
+      visitFormWhereCondition.visit_time = {
+        [Op.lte]: new Date(endTime)
+      };
+    }
+    
     const visitors = await Visitors.findAll({
+      where: whereCondition,
       include: [
-        { model: VisitorsForms ,distinct: true },
-        { model: Host ,distinct: true }
+        { 
+          model: VisitorsForms,
+          distinct: true,
+          where: Object.keys(visitFormWhereCondition).length > 0 ? visitFormWhereCondition : undefined
+        },
+        { 
+          model: Host,
+          distinct: true 
+        }
       ],
       distinct: true
     });
+    
     res.json(visitors);
   } catch (error) {
     console.error('获取访客列表失败:', error);
