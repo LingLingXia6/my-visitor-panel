@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Typography, Tag, Space, Button, Modal, Divider, Collapse, Empty, Input, DatePicker, Form, Row, Col } from 'antd';
-import { UserOutlined, PhoneOutlined, IdcardOutlined, ClockCircleOutlined, EnvironmentOutlined, BankOutlined, ReloadOutlined, CalendarOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, Card, Typography, Tag, Space, Button, Modal, Divider, Collapse, Empty, Input, DatePicker, Form, Row, Col, Tabs } from 'antd';
+import { UserOutlined, PhoneOutlined, IdcardOutlined, ClockCircleOutlined, EnvironmentOutlined, BankOutlined, ReloadOutlined, CalendarOutlined, SearchOutlined, TeamOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './VisitorList.css';
 import moment from 'moment';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
+const { TabPane } = Tabs;
 
+// 在组件顶部添加新的状态
 const VisitorList = () => {
   const [loading, setLoading] = useState(true);
   const [visitors, setVisitors] = useState([]);
@@ -26,6 +28,7 @@ const VisitorList = () => {
     endTime: ''
   });
   const navigate = useNavigate();
+  const [expandedHosts, setExpandedHosts] = useState({});
 
   useEffect(() => {
     fetchVisitors();
@@ -171,6 +174,7 @@ const VisitorList = () => {
     }
   ];
 
+  // 在renderDetailModal函数中，修改hostGroups部分
   const renderDetailModal = () => {
     if (!selectedVisitor) return null;
     
@@ -199,7 +203,60 @@ const VisitorList = () => {
         .sort((a, b) => b.year - a.year); // 降序排序，最近的年份在前
     };
     
+    // 按被访人分组访问记录
+    const groupVisitsByHost = () => {
+      const hostMap = new Map();
+      
+      // 遍历所有访问表单
+      selectedVisitor?.VisitorsForms?.forEach(form => {
+        // 获取表单对应的被访人ID
+        const hostId = form.FormHostVisitors?.host_id;
+        
+        // 在Hosts数组中查找对应的被访人信息
+        const hostInfo = selectedVisitor?.Hosts?.find(host => host.id === hostId);
+        
+        if (hostInfo) {
+          // 如果Map中没有这个被访人，则添加
+          if (!hostMap.has(hostId)) {
+            hostMap.set(hostId, {
+              id: hostId,
+              name: hostInfo.name,
+              phone: hostInfo.phone,
+              visits: []
+            });
+          }
+          
+          // 将访问记录添加到对应被访人的visits数组中
+          hostMap.get(hostId).visits.push({
+            id: form.id,
+            date: new Date(form.visit_time),
+            location: form.location,
+            reason: form.visit_reason
+          });
+        }
+      });
+      
+      // 将Map转换为数组并按访问次数降序排序
+      return Array.from(hostMap.values())
+        .map(host => ({
+          ...host,
+          count: host.visits.length
+        }))
+        .sort((a, b) => b.count - a.count);
+    };
+    
     const visitGroups = groupVisitsByYear();
+    const hostGroups = groupVisitsByHost();
+    
+    // 移除这里的useEffect
+    
+    // 切换展开/收起状态
+    const toggleHostExpand = (hostId) => {
+      setExpandedHosts(prev => ({
+        ...prev,
+        [hostId]: !prev[hostId]
+      }));
+    };
     
     return (
       <Modal
@@ -235,57 +292,115 @@ const VisitorList = () => {
 
         <Divider className="info-divider" />
         
-        <div className="visit-history-header">
-          <CalendarOutlined />
-          <span>历史访问记录</span>
-        </div>
-        
-        <div className="visit-history">
-          {visitGroups.length > 0 ? (
-            <div className="visit-groups">
-              {visitGroups.map(group => (
-                <div key={group.year} className="visit-year-group">
-                  <Collapse 
-                    defaultActiveKey={[visitGroups[0]?.year.toString()]}
-                    ghost
-                    className="year-collapse"
-                  >
-                    <Collapse.Panel 
-                      header={`${group.year} 年 (${group.count}次)`} 
-                      key={group.year}
-                    >
-                      {group.forms.map(form => (
-                        <div key={form.id} className="visit-item">
-                          <div className="visit-item-header">
-                            <div className="visit-date">
-                              <ClockCircleOutlined /> {new Date(form.visit_time).toLocaleDateString()}
+        <Tabs defaultActiveKey="history">
+          <TabPane 
+            tab={
+              <span>
+                <CalendarOutlined />
+                历史访问记录
+              </span>
+            } 
+            key="history"
+          >
+            <div className="visit-history">
+              {visitGroups.length > 0 ? (
+                <div className="visit-groups">
+                  {visitGroups.map(group => (
+                    <div key={group.year} className="visit-year-group">
+                      <Collapse 
+                        defaultActiveKey={[visitGroups[0]?.year.toString()]}
+                        ghost
+                        className="year-collapse"
+                      >
+                        <Collapse.Panel 
+                          header={`${group.year} 年 (${group.count}次)`} 
+                          key={group.year}
+                        >
+                          {group.forms.map(form => (
+                            <div key={form.id} className="visit-item">
+                              <div className="visit-item-header">
+                                <div className="visit-date">
+                                  <ClockCircleOutlined /> {new Date(form.visit_time).toLocaleDateString()}
+                                </div>
+                                <div className="visit-id">#{form.id}</div>
+                              </div>
+                              <div className="visit-item-content">
+                                <div className="visit-location">
+                                  <EnvironmentOutlined />
+                                  <span>{form.location}</span>
+                                </div>
+                                <div className="visit-host">
+                                  <UserOutlined />
+                                  <span>{selectedVisitor?.Hosts?.[0]?.name} ({selectedVisitor?.Hosts?.[0]?.phone})</span>
+                                </div>
+                                <div className="visit-reason">
+                                  <span>{form.visit_reason}</span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="visit-id">#{form.id}</div>
-                          </div>
-                          <div className="visit-item-content">
-                            <div className="visit-location">
-                              <EnvironmentOutlined />
-                              <span>{form.location}</span>
-                            </div>
-                            <div className="visit-host">
-                              <UserOutlined />
-                              <span>{selectedVisitor?.Hosts?.[0]?.name} ({selectedVisitor?.Hosts?.[0]?.phone})</span>
-                            </div>
-                            <div className="visit-reason">
-                              <span>{form.visit_reason}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </Collapse.Panel>
-                  </Collapse>
+                          ))}
+                        </Collapse.Panel>
+                      </Collapse>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <Empty description="暂无访问记录" className="empty-records" />
+              )}
             </div>
-          ) : (
-            <Empty description="暂无访问记录" className="empty-records" />
-          )}
-        </div>
+          </TabPane>
+          
+          <TabPane 
+            tab={
+              <span>
+                <TeamOutlined />
+                不同被访问人信息
+              </span>
+            } 
+            key="hosts"
+          >
+            <div className="host-visit-history">
+              {hostGroups.length > 0 ? (
+                <div className="host-groups">
+                  {hostGroups.map(host => (
+                    <div key={host.id} className="host-group">
+                      <div 
+                        className="host-header" 
+                        onClick={() => toggleHostExpand(host.id)}
+                      >
+                        <span className="host-name">{host.name}</span>
+                        <span className="host-phone">{host.phone}</span>
+                        <span className="host-count">共访问 {host.count} 次</span>
+                      </div>
+                      
+                      {expandedHosts[host.id] && (
+                        <div className="timeline-container">
+                          {host.visits.map(visit => (
+                            <div key={visit.id} className="timeline-item">
+                              <div className="timeline-dot"></div>
+                              <div className="timeline-content">
+                                <div className="timeline-date">
+                                  <ClockCircleOutlined className="timeline-icon" /> {visit.date.toLocaleDateString()}
+                                </div>
+                                <div className="timeline-info">
+                                  <EnvironmentOutlined className="timeline-icon" />
+                                  <span>{visit.location}</span>
+                                  <span className="timeline-reason">· {visit.reason}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Empty description="暂无被访问人记录" className="empty-records" />
+              )}
+            </div>
+          </TabPane>
+        </Tabs>
       </Modal>
     );
   };

@@ -311,3 +311,154 @@
     margin-bottom: 12px;
   }
 }
+
+
+/* 为不同被访问人信息标签页添加紧凑样式 */
+.visit-item-compact {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 4px;
+}
+
+.visit-item-compact:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.visit-date-compact {
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.visit-content-compact {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.visit-id-small {
+  font-size: 12px;
+  color: #999;
+  margin-left: 8px;
+}
+
+/* 调整折叠面板样式 */
+.host-collapse .ant-collapse-content-box {
+  padding: 0 8px 8px 8px !important;
+}
+
+.host-collapse .ant-collapse-header {
+  padding: 8px 16px !important;
+}
+
+/* 为不同被访问人信息标签页添加时间轴样式 - 更简约版本 */
+.host-visit-history {
+  padding: 8px 0;
+}
+
+.host-group {
+  margin-bottom: 16px;
+}
+
+.host-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f5f8ff;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.host-name {
+  font-weight: 500;
+  color: #1890ff;
+  margin-right: 8px;
+}
+
+.host-phone {
+  color: #666;
+  font-size: 13px;
+}
+
+.host-count {
+  margin-left: auto;
+  background-color: #e6f7ff;
+  color: #1890ff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* 时间轴样式 - 简约版 */
+.timeline-container {
+  position: relative;
+  margin-left: 12px;
+  padding-left: 20px;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #e8e8e8;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 12px 0;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -25px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #1890ff;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #1890ff;
+}
+
+.timeline-content {
+  padding: 4px 0;
+  background-color: transparent;
+}
+
+.timeline-date {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-info {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.timeline-icon {
+  color: #1890ff;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.timeline-reason {
+  color: #666;
+  margin-left: 4px;
+}
