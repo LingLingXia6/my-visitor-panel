@@ -145,8 +145,11 @@ router.post('/', [
       transaction: t
     });
     // 如果已经创建，然后更新访客信息
-    if(created){
-      await db.Visitors.update(visitorData, { transaction: t });
+    if (created) {
+      await db.Visitors.update(visitorData, {
+        where: { id_card: visitor.id_card }, // 添加 where 条件
+        transaction: t
+      });
     }
   
     // 2. 创建访问表单记录
@@ -169,7 +172,7 @@ router.post('/', [
     transaction: t
   });
   if(hasHostCreated){
-    await db.Host.update(hostData, { transaction: t });
+    await db.Host.update(hostData, { where: { phone: hostData.phone }, transaction: t });
   }
   // 创建主visitor与中间表的关联记录
     await db.FormHostVisitors.create({
@@ -200,7 +203,7 @@ router.post('/', [
           transaction: t
         });
         if(hasCompanionCreated){
-          await db.Visitors.update(companionData, { transaction: t });
+          await db.Visitors.update(companionData, {where:{id_card:companionData.id_card}, transaction: t });
         }
         newCompanions.push(newCompanion);
         
@@ -433,6 +436,40 @@ router.get('/forms/all', async (req, res) => {
     console.error('获取访问表单列表失败:', error);
     res.status(500).json({ 
       message: '获取访问表单列表失败', 
+      error: error.message 
+    });
+  }
+});
+
+// 获取所有Host及其关联的Visitors和VisitorsForms
+router.get('/hosts/all', async (req, res) => {
+  try {
+    const hosts = await Host.findAll({
+      include: [
+        {
+          model: Visitors,
+          through: { attributes: [] }, // 隐藏中间表字段
+          attributes: ['id', 'name', 'phone', 'id_card', 'company'],
+          distinct: true
+        },
+        {
+          model: VisitorsForms,
+          through: { attributes: [] }, // 隐藏中间表字段
+          attributes: ['id', 'visit_reason', 'visit_time', 'location'],
+          distinct: true
+        }
+      ],
+      distinct: true // 确保主记录也不重复
+    });
+
+    res.json({
+      message: '获取所有Host及其关联数据成功',
+      data: hosts
+    });
+  } catch (error) {
+    console.error('获取Host列表失败:', error);
+    res.status(500).json({ 
+      message: '获取Host列表失败', 
       error: error.message 
     });
   }

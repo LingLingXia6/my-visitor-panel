@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import VisitorPage from './pages/VisitorPage';
 import VisitFormList from './pages/VisitFormList'; // 导入新组件
 import VisitorList from './pages/VisitorList';
+import HostInfo from './pages/HostInfo'; // 导入新组件
 
 // 修改路由配置
 const APP_ROUTES = [
@@ -19,7 +20,8 @@ const APP_ROUTES = [
   { path: "users", element: <Users />, icon: "Team" },
   { path: "visitor", element: <VisitorPage />, icon: "Form" }, // 访客登记路由
   { path: "visit-forms", element: <VisitFormList />, icon: "UnorderedList" } ,// 添加访客申请单列表路由
-  { path: "visitors", element: <VisitorList />, icon: "Team" }
+  { path: "visitors", element: <VisitorList />, icon: "Team" },
+  { path: "host-info", element: <HostInfo />, icon: "Team" } // 添加新路由
 ];
 
 // 路由守卫组件 - 从 Cookie 获取 token

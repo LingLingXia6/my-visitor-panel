@@ -111,7 +111,7 @@ const MainLayout = () => {
     {
       key: '3',
       icon: <UnorderedListOutlined />,
-      label: <Link to="">被拜访人信息</Link>
+      label: <Link to="/host-info">被拜访人信息</Link>
     },
     {
       key: '4',

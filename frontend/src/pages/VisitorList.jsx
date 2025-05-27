@@ -4,6 +4,7 @@ import { UserOutlined, PhoneOutlined, IdcardOutlined, ClockCircleOutlined, Envir
 import { useNavigate } from 'react-router-dom';
 import './VisitorList.css';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
