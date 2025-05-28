@@ -232,3 +232,8 @@
 .safety-notice.expanded .expand-button {
   background: #f9f9f9;
 }
+
+.visitor-container {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
