@@ -1,8 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Card, Typography, Tag, Space, Button, message, Modal, Divider, Form, Input, DatePicker, Row, Col } from 'antd';
-import { EyeOutlined, UserOutlined, TeamOutlined, EnvironmentOutlined, ClockCircleOutlined, PhoneOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
-import moment from 'moment';
-import './VisitFormList.css';
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  Card,
+  Typography,
+  Tag,
+  Space,
+  Button,
+  message,
+  Modal,
+  Divider,
+  Form,
+  Input,
+  DatePicker,
+  Row,
+  Col,
+} from "antd";
+import {
+  EyeOutlined,
+  UserOutlined,
+  TeamOutlined,
+  EnvironmentOutlined,
+  ClockCircleOutlined,
+  PhoneOutlined,
+  IdcardOutlined,
+  BankOutlined,
+  FileTextOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import moment from "moment";
+import "./VisitFormList.css";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -17,16 +44,16 @@ const VisitFormList = () => {
     pageSize: 10,
     total: 0,
     totalPages: 0,
-    hasNextPage: false
+    hasNextPage: false,
   });
   const [filterForm] = Form.useForm();
   const [filters, setFilters] = useState({
-    visitorName: '',
-    visitorPhone: '',
-    hostName: '',
-    hostPhone: '',
-    startTime: '',
-    endTime: ''
+    visitorName: "",
+    visitorPhone: "",
+    hostName: "",
+    hostPhone: "",
+    startTime: "",
+    endTime: "",
   });
 
   useEffect(() => {
@@ -36,34 +63,42 @@ const VisitFormList = () => {
   const fetchVisitForms = async () => {
     try {
       setLoading(true);
-      
+
       // 构建查询参数
       const queryParams = new URLSearchParams();
-      queryParams.append('page', pagination.current);
-      queryParams.append('pageSize', pagination.pageSize);
-      
-      if (filters.visitorName) queryParams.append('visitorName', filters.visitorName);
-      if (filters.visitorPhone) queryParams.append('visitorPhone', filters.visitorPhone);
-      if (filters.hostName) queryParams.append('hostName', filters.hostName);
-      if (filters.hostPhone) queryParams.append('hostPhone', filters.hostPhone);
-      if (filters.startTime) queryParams.append('startTime', filters.startTime);
-      if (filters.endTime) queryParams.append('endTime', filters.endTime);
-      
+      queryParams.append("page", pagination.current);
+      queryParams.append("pageSize", pagination.pageSize);
+
+      if (filters.visitorName)
+        queryParams.append("visitorName", filters.visitorName);
+      if (filters.visitorPhone)
+        queryParams.append("visitorPhone", filters.visitorPhone);
+      if (filters.hostName) queryParams.append("hostName", filters.hostName);
+      if (filters.hostPhone) queryParams.append("hostPhone", filters.hostPhone);
+      if (filters.startTime) queryParams.append("startTime", filters.startTime);
+      if (filters.endTime) queryParams.append("endTime", filters.endTime);
+
       // 使用 fetch 直接获取数据，添加分页参数
-      const response = await fetch(`http://localhost:8082/visitors/forms/all?${queryParams.toString()}`);
+      const response = await fetch(
+        `http://localhost:8082/forms?${queryParams.toString()}`
+      );
       const result = await response.json();
-      
+
       if (result && result.data) {
         // 处理数据
-        result.data.forEach(list => {
+        result.data.forEach((list) => {
           list.host = list?.Hosts?.[0] || {};
-          list.mainVisitor = list?.Visitors?.find((item) => item?.FormHostVisitors?.isMinRole === 1);
-          list.attendees = list?.Visitors?.filter((item) => item?.FormHostVisitors?.isMinRole === 0);
+          list.mainVisitor = list?.Visitors?.find(
+            (item) => item?.FormHostVisitors?.isMinRole === 1
+          );
+          list.attendees = list?.Visitors?.filter(
+            (item) => item?.FormHostVisitors?.isMinRole === 0
+          );
         });
-        
-        console.log('获取访问表单列表成功:', result.data);
+
+        console.log("获取访问表单列表成功:", result.data);
         setVisitForms(result.data);
-        
+
         // 更新分页信息
         if (result.pagination) {
           setPagination({
@@ -71,52 +106,52 @@ const VisitFormList = () => {
             pageSize: result.pagination.pageSize,
             total: result.pagination.total,
             totalPages: result.pagination.totalPages,
-            hasNextPage: result.pagination.hasNextPage
+            hasNextPage: result.pagination.hasNextPage,
           });
         }
       }
       setLoading(false);
     } catch (error) {
-      console.error('获取访问表单列表失败:', error);
-      message.error('获取访问表单列表失败');
+      console.error("获取访问表单列表失败:", error);
+      message.error("获取访问表单列表失败");
       setLoading(false);
     }
   };
 
   // 处理分页变化
   const handleTableChange = (paginationParams) => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       current: paginationParams.current,
-      pageSize: paginationParams.pageSize
+      pageSize: paginationParams.pageSize,
     }));
   };
 
   // 处理筛选表单提交
   const handleSearch = (values) => {
     // 处理日期范围
-    let startTime = '';
-    let endTime = '';
-    
+    let startTime = "";
+    let endTime = "";
+
     if (values.dateRange && values.dateRange.length === 2) {
-      startTime = values.dateRange[0].format('YYYY-MM-DD 00:00:00');
-      endTime = values.dateRange[1].format('YYYY-MM-DD 23:59:59');
+      startTime = values.dateRange[0].format("YYYY-MM-DD 00:00:00");
+      endTime = values.dateRange[1].format("YYYY-MM-DD 23:59:59");
     }
-    
+
     // 更新筛选条件
     setFilters({
-      visitorName: values.visitorName || '',
-      visitorPhone: values.visitorPhone || '',
-      hostName: values.hostName || '',
-      hostPhone: values.hostPhone || '',
+      visitorName: values.visitorName || "",
+      visitorPhone: values.visitorPhone || "",
+      hostName: values.hostName || "",
+      hostPhone: values.hostPhone || "",
       startTime,
-      endTime
+      endTime,
     });
-    
+
     // 重置到第一页
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
-      current: 1
+      current: 1,
     }));
   };
 
@@ -124,16 +159,16 @@ const VisitFormList = () => {
   const handleReset = () => {
     filterForm.resetFields();
     setFilters({
-      visitorName: '',
-      visitorPhone: '',
-      hostName: '',
-      hostPhone: '',
-      startTime: '',
-      endTime: ''
+      visitorName: "",
+      visitorPhone: "",
+      hostName: "",
+      hostPhone: "",
+      startTime: "",
+      endTime: "",
     });
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
-      current: 1
+      current: 1,
     }));
   };
 
@@ -148,14 +183,14 @@ const VisitFormList = () => {
 
   // 格式化日期时间
   const formatDateTime = (dateTimeStr) => {
-    return moment(dateTimeStr).format('YYYY-MM-DD HH:mm');
+    return moment(dateTimeStr).format("YYYY-MM-DD HH:mm");
   };
 
   // 获取访客角色的中文名称
   const getRoleName = (role) => {
     const roleMap = {
-      'visitor': '访客',
-      'companion': '随行人'
+      visitor: "访客",
+      companion: "随行人",
     };
     return roleMap[role] || role;
   };
@@ -163,70 +198,74 @@ const VisitFormList = () => {
   // 表格列配置
   const columns = [
     {
-      title: '申请单号',
-      dataIndex: 'id',
-      key: 'id',
+      title: "申请单号",
+      dataIndex: "id",
+      key: "id",
       width: 100,
-      fixed: 'left',
-      render: (id) => <span className="form-id">#{id}</span>
+      fixed: "left",
+      render: (id) => <span className="form-id">#{id}</span>,
     },
     {
-      title: '访客姓名',
-      dataIndex: ['mainVisitor', 'name'],
-      key: 'visitorName',
+      title: "访客姓名",
+      dataIndex: ["mainVisitor", "name"],
+      key: "visitorName",
       width: 120,
     },
     {
-      title: '访客单位',
-      dataIndex: ['mainVisitor', 'company'],
-      key: 'company',
+      title: "访客单位",
+      dataIndex: ["mainVisitor", "company"],
+      key: "company",
       width: 150,
-      responsive: ['md'],
+      responsive: ["md"],
     },
     {
-      title: '被访人',
-      dataIndex: ['host', 'name'],
-      key: 'hostName',
+      title: "被访人",
+      dataIndex: ["host", "name"],
+      key: "hostName",
       width: 120,
     },
     {
-      title: '被访人电话',
-      dataIndex: ['host', 'phone'],
-      key: 'hostPhone',
+      title: "被访人电话",
+      dataIndex: ["host", "phone"],
+      key: "hostPhone",
       width: 150,
-      responsive: ['lg'],
+      responsive: ["lg"],
     },
     {
-      title: '来访地点',
-      dataIndex: 'location',
-      key: 'location',
+      title: "来访地点",
+      dataIndex: "location",
+      key: "location",
       width: 150,
-      responsive: ['md'],
+      responsive: ["md"],
     },
     {
-      title: '来访时间',
-      dataIndex: 'visit_time',
-      key: 'visitTime',
+      title: "来访时间",
+      dataIndex: "visit_time",
+      key: "visitTime",
       width: 180,
-      render: (time) => formatDateTime(time)
+      render: (time) => formatDateTime(time),
     },
     {
-      title: '随行人数',
-      key: 'companionCount',
+      title: "随行人数",
+      key: "companionCount",
       width: 100,
       render: (_, record) => {
         const companions = record?.attendees ? record.attendees : [];
-        return companions?.length > 0 ? <Tag color="blue">{companions?.length}人</Tag> : '无';
-      }
+        return companions?.length > 0 ? (
+          <Tag color="blue">{companions?.length}人</Tag>
+        ) : (
+          "无"
+        );
+      },
     },
     {
-      title: '操作',
-      key: 'action',
-      fixed: 'right',
+      title: "操作",
+      key: "action",
+      fixed: "right",
       width: 80,
       render: (_, record) => (
-        <Button 
-          type="link" 
+        <Button
+          type="link"
           onClick={() => showDetail(record)}
           className="detail-btn"
         >
@@ -239,12 +278,10 @@ const VisitFormList = () => {
   // 渲染详情弹窗
   const renderDetailModal = () => {
     if (!currentForm) return null;
-    
-    const companions = currentForm?.attendees ? 
-    currentForm?.attendees  : [];
-    
-    const visitor = currentForm?.mainVisitor ? 
-    currentForm.mainVisitor: null;
+
+    const companions = currentForm?.attendees ? currentForm?.attendees : [];
+
+    const visitor = currentForm?.mainVisitor ? currentForm.mainVisitor : null;
 
     return (
       <Modal
@@ -270,7 +307,9 @@ const VisitFormList = () => {
               </div>
               <div className="detail-row">
                 <div className="detail-label">来访时间</div>
-                <div className="detail-value">{formatDateTime(currentForm.visit_time)}</div>
+                <div className="detail-value">
+                  {formatDateTime(currentForm.visit_time)}
+                </div>
               </div>
               <div className="detail-row">
                 <div className="detail-label">来访地点</div>
@@ -278,7 +317,9 @@ const VisitFormList = () => {
               </div>
               <div className="detail-row">
                 <div className="detail-label">申请时间</div>
-                <div className="detail-value">{formatDateTime(currentForm.createdAt)}</div>
+                <div className="detail-value">
+                  {formatDateTime(currentForm.createdAt)}
+                </div>
               </div>
             </div>
           </div>
@@ -362,16 +403,16 @@ const VisitFormList = () => {
 
   return (
     <div className="visit-form-list-container">
-      <Card 
+      <Card
         title="访客申请单列表"
         extra={
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             onClick={() => {
-              setPagination(prev => ({ ...prev, current: 1 }));
+              setPagination((prev) => ({ ...prev, current: 1 }));
               fetchVisitForms();
-            }} 
-            loading={loading} 
+            }}
+            loading={loading}
             icon={<ReloadOutlined />}
           >
             刷新
@@ -388,7 +429,7 @@ const VisitFormList = () => {
             onFinish={handleSearch}
             className="filter-form"
           >
-            <Row gutter={[16, 16]} style={{ width: '100%' }}>
+            <Row gutter={[16, 16]} style={{ width: "100%" }}>
               <Col xs={24} sm={12} md={6} lg={6}>
                 <Form.Item name="visitorName" label="访客姓名">
                   <Input placeholder="请输入访客姓名" allowClear />
@@ -411,16 +452,26 @@ const VisitFormList = () => {
               </Col>
               <Col xs={24} sm={24} md={12} lg={12}>
                 <Form.Item name="dateRange" label="开始时间">
-                  <RangePicker 
-                    style={{ width: '100%' }} 
-                    placeholder={['开始时间', '结束时间']}
+                  <RangePicker
+                    style={{ width: "100%" }}
+                    placeholder={["开始时间", "结束时间"]}
                   />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12} lg={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Col
+                xs={24}
+                sm={24}
+                md={12}
+                lg={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Form.Item>
                   <Space>
-                    <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      icon={<SearchOutlined />}
+                    >
                       搜索
                     </Button>
                     <Button onClick={handleReset}>重置</Button>
@@ -444,12 +495,12 @@ const VisitFormList = () => {
             showSizeChanger: true,
             showTotal: (total) => `共 ${total} 条记录`,
             onChange: (page, pageSize) => {
-              setPagination(prev => ({
+              setPagination((prev) => ({
                 ...prev,
                 current: page,
-                pageSize: pageSize
+                pageSize: pageSize,
               }));
-            }
+            },
           }}
           onChange={handleTableChange}
           className="visit-form-table"

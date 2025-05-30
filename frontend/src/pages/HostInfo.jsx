@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Table, Typography, Modal, Tabs, List } from 'antd';
-import { UserOutlined, PhoneOutlined, CalendarOutlined, TeamOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import './HostInfo.css';
+import React, { useState, useEffect } from "react";
+import { Card, Table, Typography, Modal, Tabs, List } from "antd";
+import {
+  UserOutlined,
+  PhoneOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import "./HostInfo.css";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -17,11 +22,11 @@ const HostInfo = () => {
     // Fetch hosts data from the API
     const fetchHosts = async () => {
       try {
-        const response = await fetch('http://localhost:8082/visitors/hosts/all');
+        const response = await fetch("http://localhost:8082/hosts");
         const result = await response.json();
         setHosts(result.data);
       } catch (error) {
-        console.error('Failed to fetch hosts:', error);
+        console.error("Failed to fetch hosts:", error);
       }
     };
 
@@ -31,47 +36,51 @@ const HostInfo = () => {
   // 定义表格列
   const columns = [
     {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
+      title: "姓名",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: '联系电话',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: "联系电话",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
-      title: '被访问次数',
-      dataIndex: 'visitCount',
-      key: 'visitCount',
+      title: "被访问次数",
+      dataIndex: "visitCount",
+      key: "visitCount",
       render: (_, record) => record.VisitorsForms.length,
     },
     {
-      title: '访客数量',
-      dataIndex: 'visitorCount',
-      key: 'visitorCount',
+      title: "访客数量",
+      dataIndex: "visitorCount",
+      key: "visitorCount",
       render: (_, record) => record.Visitors.length,
     },
     {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
+      title: "创建时间",
+      dataIndex: "createdAt",
+      key: "createdAt",
       render: (text) => new Date(text).toLocaleDateString(),
     },
     {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      title: "更新时间",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       render: (text) => new Date(text).toLocaleDateString(),
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       render: (_, record) => (
-        <a onClick={() => {
-          setSelectedHost(record);
-          setModalVisible(true);
-        }}>详情</a>
+        <a
+          onClick={() => {
+            setSelectedHost(record);
+            setModalVisible(true);
+          }}
+        >
+          详情
+        </a>
       ),
     },
   ];
@@ -79,7 +88,9 @@ const HostInfo = () => {
   return (
     <div className="host-info-container">
       <Card className="host-info-card">
-        <Title level={3} style={{ textAlign: 'center', marginBottom: '24px' }}>被拜访人信息</Title>
+        <Title level={3} style={{ textAlign: "center", marginBottom: "24px" }}>
+          被拜访人信息
+        </Title>
         <Table
           columns={columns}
           dataSource={hosts}
@@ -111,42 +122,46 @@ const HostInfo = () => {
           </div>
 
           <Tabs defaultActiveKey="history">
-            <TabPane 
+            <TabPane
               tab={
                 <span>
                   <CalendarOutlined />
                   历史被访问人信息
                 </span>
-              } 
+              }
               key="history"
             >
               <List
                 itemLayout="horizontal"
                 dataSource={selectedHost.VisitorsForms}
-                renderItem={form => (
+                renderItem={(form) => (
                   <List.Item>
                     <List.Item.Meta
-                      title={<span>{new Date(form.visit_time).toLocaleDateString()}</span>}
+                      title={
+                        <span>
+                          {new Date(form.visit_time).toLocaleDateString()}
+                        </span>
+                      }
                       description={`地点: ${form.location}, 原因: ${form.visit_reason}`}
                     />
                   </List.Item>
                 )}
               />
             </TabPane>
-            
-            <TabPane 
+
+            <TabPane
               tab={
                 <span>
                   <TeamOutlined />
                   不同访问人信息
                 </span>
-              } 
+              }
               key="visitors"
             >
               <List
                 itemLayout="horizontal"
                 dataSource={selectedHost.Visitors}
-                renderItem={visitor => (
+                renderItem={(visitor) => (
                   <List.Item>
                     <List.Item.Meta
                       title={<span>{visitor.name}</span>}
