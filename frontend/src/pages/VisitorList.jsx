@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './VisitorList.css';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import ColumnGroup from 'antd/es/table/ColumnGroup';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -176,10 +177,76 @@ const VisitorList = () => {
   ];
 
   // 在renderDetailModal函数中，修改hostGroups部分
+  // Move hostGroups state to the main component
+  const [hostGroups, setHostGroups] = useState([]);
+ // 按被访人分组访问记录
+ const groupVisitsByHost = async () => {
+  const hostMap = new Map();
+  const {id}=selectedVisitor;
+  console.log("id",id);
+  const response = await fetch(`http://localhost:8082/visitors/${id}`);
+  console.log("response",response);
+  const result = await response.json();
+ console.log("result",result);
+  // 遍历所有访问表单
+  result?.VisitorsForms?.forEach(form => {
+    // 获取表单对应的被访人ID
+    const hostId = form.FormHostVisitors?.host_id;
+    
+    // 在Hosts数组中查找对应的被访人信息
+    const hostInfo = selectedVisitor?.Hosts?.find(host => host.id === hostId);
+    
+    if (hostInfo) {
+      // 如果Map中没有这个被访人，则添加
+      if (!hostMap.has(hostId)) {
+        hostMap.set(hostId, {
+          id: hostId,
+          name: hostInfo.name,
+          phone: hostInfo.phone,
+          visits: []
+        });
+      }
+      
+      // 将访问记录添加到对应被访人的visits数组中
+      hostMap.get(hostId).visits.push({
+        id: form.id,
+        date: new Date(form.visit_time),
+        location: form.location,
+        reason: form.visit_reason
+      });
+    }
+  });
+  console.log("hostMap",Array.from(hostMap.values())
+  .map(host => ({
+    ...host,
+    count: host.visits.length
+  }))
+  .sort((a, b) => b.count - a.count));
+  // 将Map转换为数组并按访问次数降序排序
+  return Array.from(hostMap.values())
+    .map(host => ({
+      ...host,
+      count: host.visits.length
+    }))
+    .sort((a, b) => b.count - a.count);
+};
+  useEffect(() => {
+    if (selectedVisitor) {
+      const fetchHostGroups = async () => {
+        const groups = await groupVisitsByHost();
+        console.log("groups",groups); // 打印groups以检查其内容
+        setHostGroups(groups);
+      };
+      fetchHostGroups();
+    } else {
+      setHostGroups([]);
+    }
+  }, [selectedVisitor]);
   const renderDetailModal = () => {
     if (!selectedVisitor) return null;
     
-    // 按年份对访问记录进行分组
+    // Remove the useState and useEffect from here
+    
     const groupVisitsByYear = () => {
       const groups = {};
       
@@ -204,52 +271,11 @@ const VisitorList = () => {
         .sort((a, b) => b.year - a.year); // 降序排序，最近的年份在前
     };
     
-    // 按被访人分组访问记录
-    const groupVisitsByHost = () => {
-      const hostMap = new Map();
-      
-      // 遍历所有访问表单
-      selectedVisitor?.VisitorsForms?.forEach(form => {
-        // 获取表单对应的被访人ID
-        const hostId = form.FormHostVisitors?.host_id;
-        
-        // 在Hosts数组中查找对应的被访人信息
-        const hostInfo = selectedVisitor?.Hosts?.find(host => host.id === hostId);
-        
-        if (hostInfo) {
-          // 如果Map中没有这个被访人，则添加
-          if (!hostMap.has(hostId)) {
-            hostMap.set(hostId, {
-              id: hostId,
-              name: hostInfo.name,
-              phone: hostInfo.phone,
-              visits: []
-            });
-          }
-          
-          // 将访问记录添加到对应被访人的visits数组中
-          hostMap.get(hostId).visits.push({
-            id: form.id,
-            date: new Date(form.visit_time),
-            location: form.location,
-            reason: form.visit_reason
-          });
-        }
-      });
-      
-      // 将Map转换为数组并按访问次数降序排序
-      return Array.from(hostMap.values())
-        .map(host => ({
-          ...host,
-          count: host.visits.length
-        }))
-        .sort((a, b) => b.count - a.count);
-    };
+   
     
     const visitGroups = groupVisitsByYear();
-    const hostGroups = groupVisitsByHost();
     
-    // 移除这里的useEffect
+    // 移除原来的hostGroups调用
     
     // 切换展开/收起状态
     const toggleHostExpand = (hostId) => {
