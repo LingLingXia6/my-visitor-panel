@@ -54,7 +54,9 @@ const VisitorPage = () => {
         name: values.visitorName,
         phone: values.visitorPhone,
         id_card: values.idCard,
-        company: values.visitorCompany || values.companyName
+        company: values.visitorCompany || values.companyName,
+        email: values.email,
+
       },
       visitForm: {
         visit_reason: values.visitReason,
@@ -436,6 +438,17 @@ const VisitorPage = () => {
               rules={[{ required: true, message: '请输入您的姓名' }]}
             >
               <Input prefix={<UserOutlined />} placeholder="请输入您的姓名" />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              label="电子邮箱"
+              rules={[
+                { required: true, message: '请输入您的电子邮箱' },
+                { type: 'email', message: '请输入有效的电子邮箱地址' }
+              ]}
+            >
+              <Input placeholder="请输入您的电子邮箱" />
             </Form.Item>
 
             <Form.Item

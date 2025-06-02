@@ -79,6 +79,11 @@ router.post(
       .optional()
       .isLength({ max: 100 })
       .withMessage("公司名称不能超过100个字符"),
+    body("visitor.email")
+      .notEmpty()
+      .withMessage("电子邮箱不能为空")
+      .isEmail()
+      .withMessage("请输入有效的电子邮箱地址"),
 
     // 访问表单信息验证
     body("visitForm.visit_reason").notEmpty().withMessage("来访事由不能为空"),
@@ -142,7 +147,8 @@ router.post(
         name: visitor.name,
         phone: visitor.phone,
         id_card: visitor.id_card,
-        company: visitor.company, // 这里添加了 company 字段，因为它是可选的，所以需要在这里添加
+        company: visitor.company, 
+        email: visitor.email,
       };
       //创建访客信息，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: visitorData
       const [newVisitor, created] = await db.Visitors.findOrCreate({
