@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const db = require("../models");
 const { Visitors, Sequelize, Host, VisitorsForms } = db;
 const { setParamter, setPagination } = require("../utils/tools");
+const sendMail = require("../utils/mail");
 // 获取所有访客
 // 根据 parameter后获取visitorId，然后依据visitorId再按照visitorId分组获取VisitorsFormId数据，再和visitor表根据visitorid拼接数据。
     //  result 的格式 [{
@@ -17,6 +18,34 @@ const { setParamter, setPagination } = require("../utils/tools");
     //     "visitor_id": 2,
     //     "form_count": 6
     // }],
+    // 
+    //   // ...
+
+
+// 发送邮件
+router.get('/email', async (req, res) => {
+  try {
+    const html = `
+      您好，<span style="color: red">你好test 账号</span><br><br>
+      恭喜，您已成功注册会员！<br><br>
+      请访问<a href="https://clwy.cn">「长乐未央」</a>官网，了解更多。<br><br>
+      ━━━━━━━━━━━━━━━━<br>
+      长乐未央
+    `;
+    
+    await sendMail('183840102@qq.com', '「长乐未央」的注册成功通知', html);
+    res.json({ success: true, message: '邮件发送成功' });
+  } catch (error) {
+    console.error('邮件发送失败:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: '邮件发送失败',
+      error: error.message 
+    });
+  }
+});
+
+  
 router.get("/", async (req, res) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
