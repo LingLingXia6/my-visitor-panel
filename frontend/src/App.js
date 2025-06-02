@@ -19,7 +19,7 @@ const APP_ROUTES = [
   { path: "change-password", element: <ChangePassword />, icon: "Lock" },
   { path: "users", element: <Users />, icon: "Team" },
   { path: "visitor", element: <VisitorPage />, icon: "Form" }, // 访客登记路由
-  { path: "visit-forms", element: <VisitFormList />, icon: "UnorderedList" } ,// 添加访客申请单列表路由
+  { path: "forms", element: <VisitFormList />, icon: "UnorderedList" } ,// 添加访客申请单列表路由
   { path: "visitors", element: <VisitorList />, icon: "Team" },
   { path: "host-info", element: <HostInfo />, icon: "Team" } // 添加新路由
 ];
@@ -57,7 +57,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           
           {/* 修改默认路由重定向到歌手管理页面 */}
-          <Route index element={<Navigate to="/singers" replace />} />
+          <Route index element={<Navigate to="/forms" replace />} />
           
           {/* 添加公开访问的访客登记页面路由 */}
           <Route path="/visitor-registration" element={<VisitorPage />} />

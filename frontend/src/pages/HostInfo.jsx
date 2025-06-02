@@ -153,7 +153,7 @@ const HostInfo = () => {
               tab={
                 <span>
                   <TeamOutlined />
-                  不同访问人信息
+                  访问人信息
                 </span>
               }
               key="visitors"

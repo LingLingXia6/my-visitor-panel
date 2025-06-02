@@ -51,7 +51,7 @@ const MainLayout = () => {
     // 路径与菜单键值的映射关系
     const pathToKeyMap = {
       '/visitor': '0',
-      '/visit-forms': '1',
+      '/forms': '1',
       '/visitors': '2',
       '/change-password': '4',
     };
@@ -100,7 +100,7 @@ const MainLayout = () => {
     {
       key: '1',
       icon: <UnorderedListOutlined />,
-      label: <Link to="/visit-forms">访客申请单</Link>
+      label: <Link to="/forms">访客申请单</Link>
     },
     {
       key: '2',

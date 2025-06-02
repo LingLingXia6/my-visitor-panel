@@ -327,7 +327,7 @@ const VisitFormList = () => {
           <div className="detail-section">
             <div className="section-header">
               <UserOutlined className="section-icon" />
-              <span>被访人信息</span>
+              <span>被访人</span>
             </div>
             <div className="detail-content">
               <div className="detail-row">
@@ -344,7 +344,7 @@ const VisitFormList = () => {
           <div className="detail-section">
             <div className="section-header">
               <UserOutlined className="section-icon" />
-              <span>访客信息</span>
+              <span>访客</span>
             </div>
             {visitor && (
               <div className="detail-content">

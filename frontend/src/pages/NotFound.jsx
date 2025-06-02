@@ -19,7 +19,7 @@ const NotFound = () => {
             type="primary"
             size="large"
             icon={<HomeOutlined />}
-            onClick={() => navigate('/singers')}
+            onClick={() => navigate('/')}
             className="home-button"
           >
             返回首页
