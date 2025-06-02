@@ -1,22 +1,11 @@
-const { setParamter, setPagination } = require("../utils/tools");
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const db = require("../models");
 const { Visitors, Sequelize, Host, VisitorsForms } = db;
-
+const { setParamter, setPagination } = require("../utils/tools");
 // 获取所有访客
-router.get("/", async (req, res) => {
-  try {
-    const { page = 1, pageSize = 10 } = req.query;
-    const params = setParamter(req.query);
-    const { count, rows: visitorsData } = await Visitors.findAndCountAll({
-      where: { ...params },
-      attributes: ["id"],
-    });
-    const pagination = setPagination({ count, pageSize, page });
-    const ids = visitorsData?.map((i) => i?.id) || [];
-    // 根据 parameter后获取visitorId，然后依据visitorId再按照visitorId分组获取VisitorsFormId数据，再和visitor表根据visitorid拼接数据。
+// 根据 parameter后获取visitorId，然后依据visitorId再按照visitorId分组获取VisitorsFormId数据，再和visitor表根据visitorid拼接数据。
     //  result 的格式 [{
     //     "id": 2,
     //     "name": "夏夏",
@@ -28,6 +17,17 @@ router.get("/", async (req, res) => {
     //     "visitor_id": 2,
     //     "form_count": 6
     // }],
+router.get("/", async (req, res) => {
+  try {
+    const { page = 1, pageSize = 10 } = req.query;
+    const params = setParamter(req.query);
+    const { count, rows: visitorsData } = await Visitors.findAndCountAll({
+      where: { ...params },
+      attributes: ["id"],
+    });
+    const pagination = setPagination({ count, pageSize, page });
+    const ids = visitorsData?.map((i) => i?.id) || [];
+    
     const result = await db.sequelize.query(
       `SELECT *,
               f.form_count
@@ -137,7 +137,6 @@ router.post(
 
     try {
       const { visitor, visitForm, hosts, companions } = req.body;
-
       // 1. 创建访客记录
       const visitorData = {
         name: visitor.name,
@@ -174,7 +173,6 @@ router.post(
         name: hosts[0].name,
         phone: hosts[0].phone,
       };
-
       // 创建被访问人信息，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: hostData
       const [mainHost, hasHostCreated] = await db.Host.findOrCreate({
         where: { phone: hosts[0].phone },
@@ -285,7 +283,6 @@ router.get("/:id", async (req, res) => {
     if (!visitor) {
       return res.status(404).json({ message: "访客不存在" });
     }
-
     res.json(visitor);
   } catch (error) {
     console.error("获取访客详情失败:", error);

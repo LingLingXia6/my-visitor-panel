@@ -27,11 +27,15 @@ module.exports = (sequelize, DataTypes) => {
     id_card: {
       type:DataTypes.STRING,
      allowNull: false
-    } ,
+    },
     company: {
       type:DataTypes.STRING,
      allowNull: false
-    } 
+    },
+    email: {
+      type:DataTypes.STRING,
+      allowNull: false,
+    }
   }, {
     sequelize,
     modelName: 'Visitors',
