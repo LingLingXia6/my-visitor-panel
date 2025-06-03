@@ -33,7 +33,7 @@ router.get('/email', async (req, res) => {
       长乐未央
     `;
     
-    await sendMail('183840102@qq.com', '「长乐未央」的注册成功通知', html);
+    await sendMail('824542478@qq.com', '「长乐未央」的注册成功通知', html);
     res.json({ success: true, message: '邮件发送成功' });
   } catch (error) {
     console.error('邮件发送失败:', error);
