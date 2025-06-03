@@ -24,10 +24,10 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', indexRouter);
 app.use('/images', imageRouter);
 
-// // 404
-// app.use((req, res, next) => {
-//     next(createError(404));
-//   });
+// 404
+app.use((req, res, next) => {
+    next(createError(404));
+  });
   
   // 错误处理
   app.use((err, req, res, next) => {
