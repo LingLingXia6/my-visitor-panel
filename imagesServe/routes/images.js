@@ -14,7 +14,7 @@ const uploadDir = path.join(__dirname, '..', 'uploads');
 const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+    cb(null, Date.now() +'-'+ file.originalname);
   },
 });
 //创建一个multer实例
@@ -28,8 +28,15 @@ router.post('/', upload.single('image'), async (req, res) => {
         if (!image) {
             return res.status(400).json({ error: 'No image provided' });
         }
+        // 上传成功后返回图片信息
+        res.status(200).json({
+            message: '图片上传成功',
+            filename: image.filename,
+            url: `${req.protocol}://${req.get('host')}/uploads/${image.filename}`
+        });
     }catch(error){
         console.error(error);
+        res.status(500).json({ error: '服务器错误' });
     }
 });
 
