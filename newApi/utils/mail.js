@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 /**
  * 发件箱配置
@@ -9,20 +9,14 @@ const transporter = nodemailer.createTransport({
   secure: process.env.MAILER_SECURE,
   auth: {
     user: process.env.MAILER_USER,
-    pass: process.env.MAILER_PASS
+    pass: process.env.MAILER_PASS,
   },
 });
-
-
-
-
 
 /**
  * 发件箱配置
  */
 
-
-  
 /**
  * 发送邮件
  * @param email
@@ -37,8 +31,6 @@ const sendMail = async (email, subject, html) => {
     subject,
     html,
   });
-}
+};
 
 module.exports = sendMail;
-
-  
