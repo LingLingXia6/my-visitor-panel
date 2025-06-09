@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 移除 useLocation
 
   // 获取用户信息的函数
   const fetchUserInfo = async () => {
@@ -35,14 +36,16 @@ export const UserProvider = ({ children }) => {
 
   // 组件挂载时检查 token 并获取用户信息
   useEffect(() => {
-    console.log("UserProvider -----token",token)
+    console.log("UserProvider -----token", token)
     if (token) {
       fetchUserInfo();
     } else {
       setLoading(false);
     }
-  }, [token]);
-console.log("UserProvider -----userInfo",userInfo)
+  }, [token]); // 移除 location.pathname
+  
+  console.log("UserProvider -----userInfo", userInfo)
+  
   return (
     <UserContext.Provider value={{ userInfo, loading, error, fetchUserInfo, clearUserInfo }}>
       {children}

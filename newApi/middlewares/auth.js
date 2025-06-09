@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET);
     console.log("decoded",decoded,decoded.username,)
     // 从数据库中查找用户
-    const user = await db.user.findOne({
+    const user = await db.User.findOne({
       where: {
         username: decoded.username,
       },

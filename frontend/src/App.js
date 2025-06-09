@@ -13,6 +13,7 @@ import VisitFormList from './pages/VisitFormList'; // 导入新组件
 import VisitorList from './pages/VisitorList';
 import HostInfo from './pages/HostInfo'; // 导入新组件
 import {UserProvider} from './context/UserContext';
+import RouteChangeListener from './components/RouteChangeListener';
 // 修改路由配置
 const APP_ROUTES = [
   // 系统设置路由
@@ -43,28 +44,22 @@ function App() {
 
   return (
     <ConfigProvider locale={zhCN}>
-    <UserProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          
-          {/* 修改默认路由重定向到歌手管理页面 */}
-          <Route index element={<Navigate to="/forms" replace />} />
-          
-          {/* 添加公开访问的访客登记页面路由 */}
-          <Route path="/visitor-registration" element={<VisitorPage />} />
-          
-          {/* 使用布局组件包裹需要鉴权的路由 */}
-          <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
-            {/* 应用路由集中配置 */}
-            {renderAppRoutes(APP_ROUTES)}
-            
-            {/* 404页面 - 使用提取的组件 */}
+        <UserProvider>
+          <RouteChangeListener />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={
+              <PrivateRoute>
+                <MainLayout routes={APP_ROUTES} />
+              </PrivateRoute>
+            }>
+              {renderAppRoutes(APP_ROUTES)}
+            </Route>
             <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+          </Routes>
+        </UserProvider>
       </BrowserRouter>
-      </UserProvider>
     </ConfigProvider>
   );
 }
