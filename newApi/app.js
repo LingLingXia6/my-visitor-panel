@@ -1,15 +1,15 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 require("dotenv").config();
 
-var indexRouter = require("./routes/index");
-//var usersRouter = require('./routes/users');
+const indexRouter = require("./routes/index");
+const usersRouter = require('./routes/users');
 const visitorsRouter = require("./routes/visitors");
 const hostsRouter = require("./routes/hosts");
 const formsRouter = require("./routes/forms");
-var app = express();
+const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -24,4 +24,5 @@ app.use("/", indexRouter);
 app.use("/visitors", visitorsRouter);
 app.use("/hosts", hostsRouter);
 app.use("/forms", formsRouter);
+app.use("/users", usersRouter);
 module.exports = app;

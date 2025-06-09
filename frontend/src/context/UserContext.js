@@ -7,6 +7,7 @@ const UserContext = createContext(null);
 
 // 创建提供者组件
 export const UserProvider = ({ children }) => {
+  const token = Cookies.get('token');
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,14 +35,14 @@ export const UserProvider = ({ children }) => {
 
   // 组件挂载时检查 token 并获取用户信息
   useEffect(() => {
-    const token = Cookies.get('token');
+    console.log("UserProvider -----token",token)
     if (token) {
       fetchUserInfo();
     } else {
       setLoading(false);
     }
-  }, []);
-
+  }, [token]);
+console.log("UserProvider -----userInfo",userInfo)
   return (
     <UserContext.Provider value={{ userInfo, loading, error, fetchUserInfo, clearUserInfo }}>
       {children}

@@ -33,13 +33,7 @@ module.exports = async (req, res, next) => {
         message: '用户不存在',
       });
     }
-    // 验证当前用户是否是管理员
-    if(user.role !== 2){
-      return res.status(401).json({
-        status: false,
-        message: '权限不足',
-      });
-    }
+    
     // 将用户信息添加到请求对象中
     req.user = user;
     // 继续处理请求

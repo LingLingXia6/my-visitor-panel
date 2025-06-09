@@ -3,8 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models');
-const User = db.user; // 使用小写的 user，与模型列表匹配
+const {User} = db; // 使用小写的 user，与模型列表匹配
 const authMiddleware = require('../middlewares/auth');
+console.log("User md",User);
 // 用户注册 API
 router.post('/register', async (req, res) => {
   try {
@@ -69,7 +70,7 @@ router.post('/login', async (req, res) => {
       })
     }
     // 查找用户
-    const user = await User.findOne({
+    const userInfo = await User.findOne({
       where: {
         [db.Sequelize.Op.or]: [
           { username: login },
@@ -77,7 +78,20 @@ router.post('/login', async (req, res) => {
         ]
       }
     });
-    console.log("user1",user);
+    
+    if (!userInfo) {
+      return res.status(404).json({
+        status: false,
+        message: '用户不存在,无法登陆'
+      });
+    }
+    
+    const user = userInfo.toJSON();
+    console.log("user",user);
+    // 方法2：转换为纯JSON对象
+if (user) {
+  console.log("user2");
+}
     if (!user) {
       return res.status(404).json({
         status: false,
@@ -94,12 +108,7 @@ router.post('/login', async (req, res) => {
         message:'密码错误'
       })
      }
-     if(user.role !== 2){
-      return res.status(401).json({
-        status:false,
-        message:'用户权限不足'
-      })
-     };
+    
 
       // 生成 JWT
     const token = jwt.sign(

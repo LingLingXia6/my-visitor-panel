@@ -4,7 +4,7 @@ import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login';
-
+import Cookies from 'js-cookie'; // 导入 js-cookie
 import Users from './pages/Users';
 import ChangePassword from './pages/ChangePassword';
 import NotFound from './pages/NotFound';
@@ -12,7 +12,7 @@ import VisitorPage from './pages/VisitorPage';
 import VisitFormList from './pages/VisitFormList'; // 导入新组件
 import VisitorList from './pages/VisitorList';
 import HostInfo from './pages/HostInfo'; // 导入新组件
-
+import {UserProvider} from './context/UserContext';
 // 修改路由配置
 const APP_ROUTES = [
   // 系统设置路由
@@ -24,11 +24,11 @@ const APP_ROUTES = [
   { path: "host-info", element: <HostInfo />, icon: "Team" } // 添加新路由
 ];
 
-// 路由守卫组件 - 从 Cookie 获取 token
 const PrivateRoute = ({ children }) => {
-  // const token = Cookies.get('token');
-  // return token ? children : <Navigate to="/login" />;
-  return children;
+  const token = Cookies.get('token');
+ 
+  return token ? children : <Navigate to="/login" />;
+ 
 };
 
 // 渲染应用路由的函数
@@ -39,19 +39,11 @@ const renderAppRoutes = (routes) => {
 };
 
 function App() {
-  useEffect(() => {
-    // const token = Cookies.get('token');
-    // if (token) {
-    //   // 尝试验证 token
-    //   getUserInfo().catch(error => {
-    //     console.log('Token 验证失败:', error);
-    //     // 不需要在这里处理错误，response 拦截器会处理 401 错误
-    //   });
-    // }
-  }, []);
+  // 路由守卫组件 - 从 Cookie 获取 token
+
   return (
     <ConfigProvider locale={zhCN}>
-      {/* <UserProvider> */}
+    <UserProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -72,7 +64,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      {/* </UserProvider> */}
+      </UserProvider>
     </ConfigProvider>
   );
 }

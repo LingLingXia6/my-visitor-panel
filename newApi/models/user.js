@@ -1,31 +1,45 @@
 'use strict';
-const { Model } = require('sequelize');
+const {
+  Model
+} = require('sequelize');
+const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
-      // 定义关联
+      // define association here
     }
   }
   User.init({
-    username: {
-      type: DataTypes.STRING(50),
+    email: DataTypes.STRING,
+    username: DataTypes.STRING,
+    password: {
+      type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      set(value) {
+        // 检查是否为空
+        if (!value) {
+          throw new Error('密码必须填写。');
+        }
+  
+        // 检查长度
+        if (value.length < 6 || value.length > 45) {
+          throw new Error('密码长度必须是6 ~ 45之间。');
+        }
+    
+        // 如果通过所有验证，进行hash处理并设置值
+        this.setDataValue('password', bcrypt.hashSync(value, 10));
+      }
     },
-    password_hash: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    role: {
-      type: DataTypes.ENUM('admin', 'viewer'),
-      defaultValue: 'viewer',
-      allowNull: false
-    }
+    introduce: DataTypes.TEXT,
+    role: DataTypes.TINYINT
   }, {
     sequelize,
     modelName: 'User',
-    underscored: true,
-    timestamps: true
   });
   return User;
 };
