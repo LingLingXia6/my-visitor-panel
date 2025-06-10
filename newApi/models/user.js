@@ -17,6 +17,16 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     email: DataTypes.STRING,
     username: DataTypes.STRING,
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        is: {
+          args: /^1[3-9]\d{9}$/,
+          msg: '请输入正确的手机号码格式'
+        }
+      }
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,

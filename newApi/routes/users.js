@@ -9,7 +9,7 @@ console.log("User md",User);
 // 用户注册 API
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, introduce } = req.body;
+    const { username, email, password, introduce ,phone} = req.body;
     
     // 检查用户名或邮箱是否已存在
     const existingUser = await User.findOne({
@@ -32,6 +32,7 @@ router.post('/register', async (req, res) => {
     const newUser = await User.create({
       username,
       email,
+      phone,
       password, // 直接传入原始密码，模型的 setter 会处理加密
       introduce: introduce || '',
       role: 2 // 默认为普通用户
