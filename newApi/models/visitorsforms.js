@@ -31,7 +31,12 @@ module.exports = (sequelize, DataTypes) => {
   arrival_time:{
     type:DataTypes.DATE,
     allowNull:true,
-  } 
+  },
+  approved:{
+    type:DataTypes.BOOLEAN,
+    allowNull:true,
+    defaultValue:false
+  }
   }, {
     sequelize,
     modelName: 'VisitorsForms',

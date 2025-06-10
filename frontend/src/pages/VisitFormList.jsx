@@ -14,6 +14,7 @@ import {
   DatePicker,
   Row,
   Col,
+  Popconfirm
 } from "antd";
 import {
   UserOutlined,
@@ -190,7 +191,33 @@ const VisitFormList = () => {
     };
     return roleMap[role] || role;
   };
-
+  const handleApprove = async (id, approved) => {
+    try {
+      const response = await fetch('http://localhost:8082/forms/approve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: id,
+          approved: approved
+        })
+      });
+  
+      const result = await response.json();
+  
+      if (result.status) {
+        message.success(result.message);
+        // 重新获取数据以更新列表
+        fetchVisitForms();
+      } else {
+        message.error(result.message || '操作失败');
+      }
+    } catch (error) {
+      console.error('审批操作失败:', error);
+      message.error('审批操作失败');
+    }
+  };
   // 表格列配置
   const columns = [
     {
@@ -205,13 +232,13 @@ const VisitFormList = () => {
       title: "访客姓名",
       dataIndex: ["mainVisitor", "name"],
       key: "visitorName",
-      width: 120,
+      width: 100,
     },
     {
       title: "访客单位",
       dataIndex: ["mainVisitor", "company"],
       key: "company",
-      width: 150,
+      width: 120,
       responsive: ["md"],
     },
     {
@@ -238,13 +265,13 @@ const VisitFormList = () => {
       title: "来访时间",
       dataIndex: "visit_time",
       key: "visitTime",
-      width: 180,
+      width: 150,
       render: (time) => formatDateTime(time),
     },
     {
       title: "随行人数",
       key: "companionCount",
-      width: 100,
+      width: 75,
       render: (_, record) => {
         const companions = record?.attendees ? record.attendees : [];
         return companions?.length > 0 ? (
@@ -255,10 +282,10 @@ const VisitFormList = () => {
       },
     },
     {
-      title: "操作",
+      title: "详情",
       key: "action",
       fixed: "right",
-      width: 80,
+      width: 90,
       render: (_, record) => (
         <Button
           type="link"
@@ -268,6 +295,38 @@ const VisitFormList = () => {
           详情
         </Button>
       ),
+    },
+    // 添加处理审批的函数
+    
+    {
+      title: "操作 (同意/拒绝)",
+      key: "action",
+      fixed: "right",
+      width: 120,
+      render: (_, record) => {
+        // 如果 approved 不为 null，显示状态
+        if (record.approved !== null) {
+          return (
+            <Tag color={record.approved ? 'green' : 'red'}>
+              {record.approved ? '已批准' : '已拒绝'}
+            </Tag>
+          );
+        }
+        
+        // 如果 approved 为 null，显示操作按钮
+        return (
+          <Popconfirm 
+            title="处理申请单" 
+            description="是否同意该申请表" 
+            onConfirm={() => handleApprove(record.id, true)}
+            onCancel={() => handleApprove(record.id, false)}
+            cancelText="拒绝"
+            okText="同意"
+          >
+            <a>操作</a>
+          </Popconfirm>
+        );
+      },
     },
   ];
 

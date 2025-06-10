@@ -74,7 +74,8 @@ const VisitorPage = () => {
       companions: values.companions.map(companion => ({
         name: companion.name,
         phone: companion.phone,
-        id_card: companion.idCard
+        id_card: companion.idCard,
+        email: companion.email  // 添加邮箱字段
       }))
     };
     
@@ -233,6 +234,12 @@ const VisitorPage = () => {
     },
     
     // 移除操作列
+    {
+      title: '随行人邮箱',
+      dataIndex: 'email',
+      key: 'email',
+      width: 200,
+    },
   ];
 
   // 切换展开/收起状态
@@ -295,7 +302,15 @@ const VisitorPage = () => {
           >
             <Input placeholder="请填写随行人手机号" />
           </Form.Item>
-          
+          <Form.Item
+            name="email"
+            label="随行人邮箱"
+            rules={[
+              { type: 'email', message: '请输入正确的邮箱格式' }
+            ]}
+          >
+            <Input placeholder="请填写随行人邮箱" />
+          </Form.Item>
         </Form>
       </ModalComponent>
     );

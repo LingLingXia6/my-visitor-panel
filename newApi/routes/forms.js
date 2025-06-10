@@ -181,4 +181,71 @@ router.get("/", async (req, res) => {
   }
 });
 
+// 更新访问表单的审批状态
+router.post('/approve', [
+  // 验证参数
+  body('id')
+    .isInt({ min: 1 })
+    .withMessage('表单ID必须是正整数'),
+  body('approved')
+    .isBoolean()
+    .withMessage('approved参数必须是布尔值')
+], async (req, res) => {
+  try {
+    // 检查验证结果
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: false,
+        message: '参数验证失败',
+        errors: errors.array()
+      });
+    }
+
+    const { id, approved } = req.body;
+
+    // 查找指定的访问表单
+    const visitorForm = await VisitorsForms.findByPk(id);
+    
+    if (!visitorForm) {
+      return res.status(404).json({
+        status: false,
+        message: '未找到指定的访问表单'
+      });
+    }
+
+    // 更新审批状态
+    await visitorForm.update({ approved });
+
+    // 重新获取更新后的数据
+    const updatedForm = await VisitorsForms.findByPk(id, {
+      include: [
+        {
+          model: db.Visitors,
+          attributes: ['id', 'name', 'phone', 'id_card', 'company']
+        },
+        {
+          model: db.Host,
+          through: { attributes: [] },
+          attributes: ['id', 'name', 'phone']
+        }
+      ]
+    });
+
+    res.json({
+      status: true,
+      message: `访问表单审批状态已${approved ? '通过' : '拒绝'}`,
+      data: updatedForm
+    });
+
+  } catch (error) {
+    console.error('更新访问表单审批状态失败:', error);
+    res.status(500).json({
+      status: false,
+      message: '更新访问表单审批状态失败',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

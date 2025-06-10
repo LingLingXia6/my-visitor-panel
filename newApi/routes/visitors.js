@@ -199,6 +199,7 @@ router.post(
       const newVisitForm = await db.VisitorsForms.create(
         {
           ...visitForm,
+          approved:null,
         },
         { transaction: t }
       );
@@ -243,6 +244,7 @@ router.post(
             phone: companion?.phone,
             id_card: companion?.id_card,
             company: visitor?.company,
+            email:companion?.email,
           };
           // 创建随行人，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: companion
           const [newCompanion, hasCompanionCreated] =
