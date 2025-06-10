@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -24,10 +24,9 @@ const APP_ROUTES = [
   { path: "visitors", element: <VisitorList />, icon: "Team" },
   { path: "host-info", element: <HostInfo />, icon: "Team" } // 添加新路由
 ];
-
+// 路由守卫组件 - 从 Cookie 获取 token
 const PrivateRoute = ({ children }) => {
   const token = Cookies.get('token');
- 
   return token ? children : <Navigate to="/login" />;
  
 };
@@ -40,8 +39,6 @@ const renderAppRoutes = (routes) => {
 };
 
 function App() {
-  // 路由守卫组件 - 从 Cookie 获取 token
-
   return (
     <ConfigProvider locale={zhCN}>
       <BrowserRouter>

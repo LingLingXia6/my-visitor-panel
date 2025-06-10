@@ -16,15 +16,11 @@ import {
   Col,
 } from "antd";
 import {
-  EyeOutlined,
   UserOutlined,
   TeamOutlined,
-  EnvironmentOutlined,
   ClockCircleOutlined,
   PhoneOutlined,
   IdcardOutlined,
-  BankOutlined,
-  FileTextOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";

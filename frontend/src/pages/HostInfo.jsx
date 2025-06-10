@@ -6,7 +6,6 @@ import {
   CalendarOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 import "./HostInfo.css";
 
 const { Title } = Typography;
@@ -16,7 +15,6 @@ const HostInfo = () => {
   const [hosts, setHosts] = useState([]);
   const [selectedHost, setSelectedHost] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch hosts data from the API
@@ -88,7 +86,7 @@ const HostInfo = () => {
   return (
     <div className="host-info-container">
       <Card className="host-info-card">
-        <Title level={3} style={{ textAlign: "center", marginBottom: "24px" }}>
+        <Title level={4} style={{  marginBottom: "24px",fontSize:'16px',fontWeight:500 }}>
           被拜访人信息
         </Title>
         <Table

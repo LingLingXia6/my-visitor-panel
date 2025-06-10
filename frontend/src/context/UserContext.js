@@ -16,11 +16,14 @@ export const UserProvider = ({ children }) => {
   // 获取用户信息的函数
   const fetchUserInfo = async () => {
     try {
-      setLoading(true);
-      const response = await getUserInfo();
-      if (response && response.status) {
-        setUserInfo(response.data);
+      if(userInfo===null){
+        setLoading(true);
+        const response = await getUserInfo();
+        if (response && response.status) {
+          setUserInfo(response.data);
+        }
       }
+     
     } catch (err) {
       setError(err);
       console.error('获取用户信息失败:', err);
@@ -38,7 +41,10 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     console.log("UserProvider -----token", token)
     if (token) {
-      fetchUserInfo();
+      if(userInfo===null){
+        fetchUserInfo();
+      }
+    
     } else {
       setLoading(false);
     }
