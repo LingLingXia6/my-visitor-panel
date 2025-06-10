@@ -9,20 +9,17 @@ const { TextArea } = Input;
 const VisitorPage = () => {
   const [form] = Form.useForm();
   const [companionForm] = Form.useForm();
-  // 移除 agreed 状态
-  // 修改初始状态，使用空数组而不是包含一个空对象的数组
   const [companions, setCompanions] = useState([]);
-
-  // 添加展开/收起状态
   const [expanded, setExpanded] = useState(false);
-  // 添加随行人员弹框状态
   const [companionModalVisible, setCompanionModalVisible] = useState(false);
-  // 添加是否为移动设备状态
   const [isMobile, setIsMobile] = useState(false);
-  // 当前编辑的随行人员
   const [currentCompanion, setCurrentCompanion] = useState({ key: 0, name: '', idCard: '', phone: '' });
-  // 是否是新增
   const [isNewCompanion, setIsNewCompanion] = useState(true);
+  
+  // 添加二维码相关状态
+  const [qrCodeLink, setQrCodeLink] = useState('');
+  const [qrCodeVisible, setQrCodeVisible] = useState(false);
+  const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
 
   // 检测设备类型
   useEffect(() => {
@@ -56,13 +53,11 @@ const VisitorPage = () => {
         id_card: values.idCard,
         company: values.visitorCompany || values.companyName,
         email: values.email,
-
       },
       visitForm: {
         visit_reason: values.visitReason,
         visit_time: values.visitStartTime,
         location: values.visitLocation,
-      
       },
       hosts: [
         {
@@ -70,12 +65,11 @@ const VisitorPage = () => {
           phone: values.hostPhone
         }
       ],
-
       companions: values.companions.map(companion => ({
         name: companion.name,
         phone: companion.phone,
         id_card: companion.idCard,
-        email: companion.email  // 添加邮箱字段
+        email: companion.email
       }))
     };
     
@@ -99,18 +93,32 @@ const VisitorPage = () => {
     .then(data => {
       console.log('提交成功:', data);
       message.success('登记信息提交成功！');
-      form.resetFields();
-      setCompanions([]);
+      
+      // 处理后端返回的链接并显示二维码
+      // 修改这里，正确获取嵌套在data对象中的qrCodeLink
+      if (data.data && (data.data.qrCodeLink || data.data.link)) {
+        const pathPart = data.data.qrCodeLink || data.data.link;
+        // 获取当前前端的协议、主机名和端口号
+        const currentHost = window.location.origin;
+        // 拼接完整的URL
+        const fullLink = `${currentHost}${pathPart}`;
+        setQrCodeLink(fullLink);
+        setQrCodeVisible(true);
+        setQrCodeModalVisible(true);
+      } 
+      
+      // form.resetFields();
+      // setCompanions([]);
     })
     .catch(error => {
       console.error('提交失败:', error);
       message.error('提交失败，请稍后重试');
     });
     
-    //移除这里的成功提示，因为已经在 fetch 成功回调中添加了
-    message.success('登记信息提交成功！');
-    form.resetFields();
-    setCompanions([]); // 重置为空数组
+    // 移除这里的重复代码，因为已经在 fetch 成功回调中处理了
+    // message.success('登记信息提交成功！');
+    // form.resetFields();
+    // setCompanions([]);
   };
 
   // 打开添加随行人员弹框
@@ -313,6 +321,43 @@ const VisitorPage = () => {
           </Form.Item>
         </Form>
       </ModalComponent>
+    );
+  };
+
+  // 添加关闭二维码弹窗的方法
+  const handleQrCodeModalClose = () => {
+    setQrCodeModalVisible(false);
+  };
+
+  // 添加二维码弹窗组件
+  const renderQrCodeModal = () => {
+    return (
+      <Modal
+        title="访客预约二维码"
+        open={qrCodeModalVisible}
+        onCancel={handleQrCodeModalClose}
+        footer={[
+          <Button key="close" type="primary" onClick={handleQrCodeModalClose}>
+            关闭
+          </Button>
+        ]}
+        centered
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+          <Text strong style={{ marginBottom: '16px' }}>请保存此二维码，用于访问时出示</Text>
+          {qrCodeLink && (
+            <QRCode
+              value={qrCodeLink}
+              size={200}
+              bordered={false}
+              errorLevel="H"
+            />
+          )}
+          <Text type="secondary" style={{ marginTop: '16px', textAlign: 'center' }}>
+            您也可以复制链接: <a href={qrCodeLink} target="_blank" rel="noopener noreferrer">{qrCodeLink}</a>
+          </Text>
+        </div>
+      </Modal>
     );
   };
 
@@ -569,6 +614,10 @@ const VisitorPage = () => {
           </Form.Item>
         </Form>
 
+        {/* 添加二维码弹窗 */}
+        {renderQrCodeModal()}
+        
+        {/* 原有的二维码部分可以保留或修改 */}
         <div className="qrcode-section">
           <Space direction="vertical" align="center">
             <QRCode value="https://example.com/visitor" />

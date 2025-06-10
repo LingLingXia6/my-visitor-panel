@@ -281,12 +281,16 @@ router.post(
       // 提交事务
       await t.commit();
 
+      // 生成二维码链接路径部分
+      const qrCodeLink = `/visitor-check/${newVisitForm.id}`;
+
       // 返回创建的数据
       const result = {
         visitor: newVisitor,
         visitForm: newVisitForm,
         hosts: mainHost ? [mainHost] : [],
         companions: newCompanions,
+        qrCodeLink: qrCodeLink // 只返回路径部分
       };
 
       res.status(201).json({

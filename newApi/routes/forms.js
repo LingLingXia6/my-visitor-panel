@@ -248,4 +248,63 @@ router.post('/approve', [
   }
 });
 
+// 根据表单ID获取详细信息
+router.post('/detail', [
+  // 验证参数
+  body('formId')
+    .isInt({ min: 1 })
+    .withMessage('表单ID必须是正整数')
+], async (req, res) => {
+  try {
+    // 检查验证结果
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: false,
+        message: '参数验证失败',
+        errors: errors.array()
+      });
+    }
+
+    const { formId } = req.body;
+
+    // 查找指定的访问表单及其关联信息
+    const formDetail = await VisitorsForms.findByPk(formId, {
+      include: [
+        {
+          model: db.Visitors,
+          attributes: ['id', 'name', 'phone', 'id_card', 'company', 'email'],
+          through: { attributes: [] }
+        },
+        {
+          model: db.Host,
+          attributes: ['id', 'name', 'phone'],
+          through: { attributes: [] }
+        }
+      ]
+    });
+    
+    if (!formDetail) {
+      return res.status(404).json({
+        status: false,
+        message: '未找到指定的访问表单'
+      });
+    }
+
+    res.json({
+      status: true,
+      message: '获取表单详情成功',
+      data: formDetail
+    });
+
+  } catch (error) {
+    console.error('获取表单详情失败:', error);
+    res.status(500).json({
+      status: false,
+      message: '获取表单详情失败',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

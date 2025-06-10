@@ -4,33 +4,37 @@ import { ConfigProvider } from "antd";
 import zhCN from "antd/lib/locale/zh_CN";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
-import Cookies from "js-cookie"; // 导入 js-cookie
+import Cookies from "js-cookie";
 import Users from "./pages/Users";
 import ChangePassword from "./pages/ChangePassword";
 import NotFound from "./pages/NotFound";
 import VisitorPage from "./pages/VisitorPage";
-import VisitFormList from "./pages/VisitFormList"; // 导入新组件
+import VisitFormList from "./pages/VisitFormList";
 import VisitorList from "./pages/VisitorList";
-import HostInfo from "./pages/HostInfo"; // 导入新组件
+import VisitorCheck from "./pages/VisitorCheck";
+import HostInfo from "./pages/HostInfo";
 import { UserProvider } from "./context/UserContext";
 import RouteChangeListener from "./components/RouteChangeListener";
 
 
-const token = Cookies.get("token");
-// 修改路由配置
+// 获取token用于路由守卫
+const getToken = () => Cookies.get("token");
+
+// 主应用路由配置
 const APP_ROUTES = [
-  // 系统设置路由
+  // 系统管理路由
   { path: "change-password", element: <ChangePassword />, icon: "Lock" },
   { path: "users", element: <Users />, icon: "Team" },
-  { path: "visitor", element: <VisitorPage />, icon: "Form" }, // 访客登记路由
-  { path: "forms", element: <VisitFormList />, icon: "UnorderedList" }, // 添加访客申请单列表路由
+  // 访客管理路由
+  { path: "visitor", element: <VisitorPage />, icon: "Form" },
+  { path: "forms", element: <VisitFormList />, icon: "UnorderedList" },
   { path: "visitors", element: <VisitorList />, icon: "Team" },
-  { path: "host-info", element: <HostInfo />, icon: "Team" }, // 添加新路由
-  { path: "/", element: <VisitFormList />, icon: "UnorderedList" }, // 添加新路由
+  { path: "host-info", element: <HostInfo />, icon: "Team" }
 ];
-// 路由守卫组件 - 从 Cookie 获取 token
+
+// 路由守卫组件 - 动态获取token以确保最新状态
 const PrivateRoute = ({ children }) => {
- 
+  const token = getToken();
   return token ? children : <Navigate to="/login" />;
 };
 
@@ -42,13 +46,18 @@ const renderAppRoutes = (routes) => {
 };
 
 function App() {
+  // 获取当前token状态
+  const token = getToken();
+  
   return (
     <ConfigProvider locale={zhCN}>
       <BrowserRouter>
         <Routes>
-          {/* 独立的访客表单路由，不需要认证和UserProvider */}
+          {/* 公开路由 - 不需要认证和UserProvider */}
           <Route path="/visitorform" element={<VisitorPage />} />
-
+          <Route path="/visitor-check/:formId" element={<VisitorCheck />} />
+          
+          
           {/* 需要认证的路由，包裹在UserProvider中 */}
           <Route
             path="/*"
@@ -56,9 +65,13 @@ function App() {
               <UserProvider>
                 <RouteChangeListener />
                 <Routes>
-                  <Route path="/login" element={token? <Navigate to="/forms" /> :
-                    <Login />
-                    } />
+                  {/* 登录路由 - 已登录则重定向到表单列表 */}
+                  <Route 
+                    path="/login" 
+                    element={token ? <Navigate to="/forms" /> : <Login />} 
+                  />
+                  
+                  {/* 主应用布局路由 */}
                   <Route
                     path="/"
                     element={
@@ -67,8 +80,13 @@ function App() {
                       </PrivateRoute>
                     }
                   >
+                    {/* 渲染主应用子路由 */}
                     {renderAppRoutes(APP_ROUTES)}
+                    {/* 默认重定向到表单列表 */}
+                    <Route index element={<Navigate to="/forms" />} />
                   </Route>
+                  
+                  {/* 404页面 */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </UserProvider>
