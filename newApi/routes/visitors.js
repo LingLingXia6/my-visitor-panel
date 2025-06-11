@@ -281,9 +281,35 @@ router.post(
       // 提交事务
       await t.commit();
 
+      // 发送邮件通知被访人
+      try {
+        const html = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+            <h2 style="color: #333;">访问申请通知</h2>
+            <p>尊敬的 <strong>${mainHost.name}</strong>：</p>
+            <p>您有一个新的访问申请需要审核。详情如下：</p>
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0;">
+              <p><strong>访客姓名：</strong>${visitor.name}</p>
+              <p><strong>访客公司：</strong>${visitor.company || '未提供'}</p>
+              <p><strong>来访事由：</strong>${visitForm.visit_reason}</p>
+              <p><strong>预计来访时间：</strong>${new Date(visitForm.visit_time).toLocaleString('zh-CN')}</p>
+              <p><strong>随行人数：</strong>${companions ? companions.length : 0}人</p>
+            </div>
+            <p>请登录系统查看详情并进行审核。</p>
+            <p style="margin-top: 30px; color: #777; font-size: 12px;">此邮件由系统自动发送，请勿直接回复。</p>
+          </div>
+        `;
+        
+        await sendMail('xialingling@tiemao.cn', '申请表请求通知', html);
+        console.log('访问申请通知邮件发送成功');
+      } catch (emailError) {
+        console.error('发送访问申请通知邮件失败:', emailError);
+        // 邮件发送失败不影响主流程
+      }
+
       // 生成二维码链接路径部分
       const qrCodeLink = `/visitor-check/${newVisitForm.id}`;
-
+ 
       // 返回创建的数据
       const result = {
         visitor: newVisitor,
