@@ -6,7 +6,7 @@
 graph TD
     Client[用户请求] --> Router[React Router]
     Router --> Public[公开路由]
-    Router --> Auth[认证路由]
+    Router --> Auth[认证路由：token验证获取userInfo]
     
     Public --> VisitorForm[访客表单页]
     Public --> VisitorCheck[访客检查页]
@@ -23,22 +23,10 @@ graph TD
     MainApp --> Visitors[访客管理]
     MainApp --> Settings[系统设置]
 
+```
 
 
 
 
-    graph TD
-    A[用户访问] --> B[路由分发]
-    B --> C[公开访问]
-    B --> D[认证访问]
+
     
-    C --> C1[访客表单]
-    C --> C2[访客查询]
-    
-    D --> D1[登录验证]
-    D1 --> D2[管理后台]
-    
-    D2 --> E1[用户管理]
-    D2 --> E2[访客管理]
-    D2 --> E3[表单管理]
-    D2 --> E4[系统设置]

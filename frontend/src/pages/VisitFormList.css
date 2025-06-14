@@ -3,7 +3,9 @@
   padding: 20px;
   background-color: #f9f9f9;
 }
-
+.visit-form-list-container .ant-table-tbody > tr:hover > td {
+  background-color: white !important;
+}
 /* 卡片样式 */
 .visit-form-card {
   border-radius: 8px;
@@ -179,26 +181,25 @@
   .visit-form-list-container {
     padding: 12px;
   }
-  
+
   .detail-row {
     flex-direction: column;
   }
-  
+
   .detail-label {
     width: 100%;
     margin-bottom: 4px;
   }
-  
+
   .companion-details {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .companion-detail {
     min-width: 100%;
   }
 }
-
 
 /* 添加筛选区域样式 */
 .filter-section {
