@@ -4,48 +4,44 @@ const { body, validationResult } = require("express-validator");
 const db = require("../models");
 const { Visitors, Sequelize, Host, VisitorsForms } = db;
 const { setParamter, setPagination } = require("../utils/tools");
+const { hostMailProducer, hostMailConsumer } = require("../utils/rabbit-mq");
+const { hostEmailhtml, visitorEmailHtml } = require("../utils/emailTemple");
 const sendMail = require("../utils/mail");
 // 获取所有访客
 // 根据 parameter后获取visitorId，然后依据visitorId再按照visitorId分组获取VisitorsFormId数据，再和visitor表根据visitorid拼接数据。
-    //  result 的格式 [{
-    //     "id": 2,
-    //     "name": "夏夏",
-    //     "phone": "15222222222",
-    //     "id_card": "320555555555555",
-    //     "company": "南京工业",
-    //     "createdAt": "2025-05-28T03:26:51.000Z",
-    //     "updatedAt": "2025-05-28T03:26:51.000Z",
-    //     "visitor_id": 2,
-    //     "form_count": 6
-    // }],
-    // 
-    //   // ...
-
+//  result 的格式 [{
+//     "id": 2,
+//     "name": "夏夏",
+//     "phone": "15222222222",
+//     "id_card": "320555555555555",
+//     "company": "南京工业",
+//     "createdAt": "2025-05-28T03:26:51.000Z",
+//     "updatedAt": "2025-05-28T03:26:51.000Z",
+//     "visitor_id": 2,
+//     "form_count": 6
+// }],
+//
+//   // ...
 
 // 发送邮件
-router.get('/email', async (req, res) => {
+router.get("/email", async (req, res) => {
   try {
-    const html = `
-      您好，<span style="color: red">你好test 账号</span><br><br>
-      恭喜，您已成功注册会员！<br><br>
-      请访问<a href="https://clwy.cn">「长乐未央」</a>官网，了解更多。<br><br>
-      ━━━━━━━━━━━━━━━━<br>
-      长乐未央
-    `;
-    
-    await sendMail('824542478@qq.com', '「长乐未央」的注册成功通知', html);
-    res.json({ success: true, message: '邮件发送成功' });
+    await sendMail(
+      "824542478@qq.com",
+      "「长乐未央」的注册成功通知",
+      visitorEmailHtml
+    );
+    res.json({ success: true, message: "邮件发送成功" });
   } catch (error) {
-    console.error('邮件发送失败:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: '邮件发送失败',
-      error: error.message 
+    console.error("邮件发送失败:", error);
+    res.status(500).json({
+      success: false,
+      message: "邮件发送失败",
+      error: error.message,
     });
   }
 });
 
-  
 router.get("/", async (req, res) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
@@ -56,7 +52,7 @@ router.get("/", async (req, res) => {
     });
     const pagination = setPagination({ count, pageSize, page });
     const ids = visitorsData?.map((i) => i?.id) || [];
-    
+
     const result = await db.sequelize.query(
       `SELECT *,
               f.form_count
@@ -176,7 +172,7 @@ router.post(
         name: visitor.name,
         phone: visitor.phone,
         id_card: visitor.id_card,
-        company: visitor.company, 
+        company: visitor.company,
         email: visitor.email,
       };
       //创建访客信息，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: visitorData
@@ -199,7 +195,7 @@ router.post(
       const newVisitForm = await db.VisitorsForms.create(
         {
           ...visitForm,
-          approved:null,
+          approved: null,
         },
         { transaction: t }
       );
@@ -244,7 +240,7 @@ router.post(
             phone: companion?.phone,
             id_card: companion?.id_card,
             company: visitor?.company,
-            email:companion?.email,
+            email: companion?.email,
           };
           // 创建随行人，如果已经创建，然后更新访客信息，如果没有创建，然后创建访客信息 defaults: companion
           const [newCompanion, hasCompanionCreated] =
@@ -283,40 +279,27 @@ router.post(
 
       // 发送邮件通知被访人
       try {
-        const html = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
-            <h2 style="color: #333;">访问申请通知</h2>
-            <p>尊敬的 <strong>${mainHost.name}</strong>：</p>
-            <p>您有一个新的访问申请需要审核。详情如下：</p>
-            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0;">
-              <p><strong>访客姓名：</strong>${visitor.name}</p>
-              <p><strong>访客公司：</strong>${visitor.company || '未提供'}</p>
-              <p><strong>来访事由：</strong>${visitForm.visit_reason}</p>
-              <p><strong>预计来访时间：</strong>${new Date(visitForm.visit_time).toLocaleString('zh-CN')}</p>
-              <p><strong>随行人数：</strong>${companions ? companions.length : 0}人</p>
-            </div>
-            <p>请登录系统查看详情并进行审核。</p>
-            <p style="margin-top: 30px; color: #777; font-size: 12px;">此邮件由系统自动发送，请勿直接回复。</p>
-          </div>
-        `;
-        
-        await sendMail('xialingling@tiemao.cn', '申请表请求通知', html);
-        console.log('访问申请通知邮件发送成功');
+        await sendMail(
+          "xialingling@tiemao.cn",
+          "申请表请求通知",
+          hostEmailhtml
+        );
+        console.log("访问申请通知邮件发送成功");
       } catch (emailError) {
-        console.error('发送访问申请通知邮件失败:', emailError);
+        console.error("发送访问申请通知邮件失败:", emailError);
         // 邮件发送失败不影响主流程
       }
 
       // 生成二维码链接路径部分
       const qrCodeLink = `/visitor-check/${newVisitForm.id}`;
- 
+
       // 返回创建的数据
       const result = {
         visitor: newVisitor,
         visitForm: newVisitForm,
         hosts: mainHost ? [mainHost] : [],
         companions: newCompanions,
-        qrCodeLink: qrCodeLink // 只返回路径部分
+        qrCodeLink: qrCodeLink, // 只返回路径部分
       };
 
       res.status(201).json({
