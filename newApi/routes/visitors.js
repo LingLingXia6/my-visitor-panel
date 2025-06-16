@@ -29,7 +29,7 @@ router.get("/email", async (req, res) => {
     await sendMail(
       "824542478@qq.com",
       "「长乐未央」的注册成功通知",
-      visitorEmailHtml
+      visitorEmailHtml()
     );
     res.json({ success: true, message: "邮件发送成功" });
   } catch (error) {
@@ -282,7 +282,7 @@ router.post(
         await sendMail(
           "xialingling@tiemao.cn",
           "申请表请求通知",
-          hostEmailhtml
+          hostEmailhtml(mainHost, newVisitor, newVisitForm, companions)
         );
         console.log("访问申请通知邮件发送成功");
       } catch (emailError) {

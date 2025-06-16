@@ -1,4 +1,4 @@
-const hostEmailhtml = `
+const hostEmailhtml = (mainHost, visitor, visitForm, companions) => `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
             <h2 style="color: #333;">访问申请通知</h2>
             <p>尊敬的 <strong>${mainHost.name}</strong>：</p>
@@ -19,8 +19,8 @@ const hostEmailhtml = `
           </div>
         `;
 
-const visitorEmailHtml = `
-      您好，<span style="color: red">你好test 账号</span><br><br>
+const visitorEmailHtml = (visitorName = '') => `
+      您好，<span style="color: red">${visitorName || '你好test 账号'}</span><br><br>
       恭喜，您已成功注册会员！<br><br>
       请访问<a href="https://clwy.cn">「长乐未央」</a>官网，了解更多。<br><br>
       ━━━━━━━━━━━━━━━━<br>
