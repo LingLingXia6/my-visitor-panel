@@ -9,6 +9,15 @@ const usersRouter = require('./routes/users');
 const visitorsRouter = require("./routes/visitors");
 const hostsRouter = require("./routes/hosts");
 const formsRouter = require("./routes/forms");
+const { hostMailConsumer ,visitorMailConsumer} = require("./utils/rabbit-mq");
+(async () => {
+  await hostMailConsumer();
+  console.log("host 邮件消费者已经启动")
+})();
+(async () => {
+  await visitorMailConsumer();
+  console.log("visitor 邮件消费者已经启动")
+})();
 const app = express();
 
 app.use(logger("dev"));

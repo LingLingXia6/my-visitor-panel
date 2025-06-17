@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 const db = require("../models");
 const { Visitors, Sequelize, Host, VisitorsForms } = db;
 const { setParamter, setPagination } = require("../utils/tools");
-const { hostMailProducer, hostMailConsumer } = require("../utils/rabbit-mq");
+const { hostMailProducer,  } = require("../utils/rabbit-mq");
 const { hostEmailhtml, visitorEmailHtml } = require("../utils/emailTemple");
 const sendMail = require("../utils/mail");
 // 获取所有访客
@@ -23,24 +23,24 @@ const sendMail = require("../utils/mail");
 //
 //   // ...
 
-// 发送邮件
-router.get("/email", async (req, res) => {
-  try {
-    await sendMail(
-      "824542478@qq.com",
-      "「长乐未央」的注册成功通知",
-      visitorEmailHtml()
-    );
-    res.json({ success: true, message: "邮件发送成功" });
-  } catch (error) {
-    console.error("邮件发送失败:", error);
-    res.status(500).json({
-      success: false,
-      message: "邮件发送失败",
-      error: error.message,
-    });
-  }
-});
+// // 发送邮件
+// router.get("/email", async (req, res) => {
+//   try {
+//     await sendMail(
+//       "824542478@qq.com",
+//       "「长乐未央」的注册成功通知",
+//       visitorEmailHtml()
+//     );
+//     res.json({ success: true, message: "邮件发送成功" });
+//   } catch (error) {
+//     console.error("邮件发送失败:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "邮件发送失败",
+//       error: error.message,
+//     });
+//   }
+// });
 
 router.get("/", async (req, res) => {
   try {
@@ -276,19 +276,14 @@ router.post(
 
       // 提交事务
       await t.commit();
-
-      // 发送邮件通知被访人
-      try {
-        await sendMail(
-          "xialingling@tiemao.cn",
-          "申请表请求通知",
-          hostEmailhtml(mainHost, newVisitor, newVisitForm, companions)
-        );
-        console.log("访问申请通知邮件发送成功");
-      } catch (emailError) {
-        console.error("发送访问申请通知邮件失败:", emailError);
-        // 邮件发送失败不影响主流程
-      }
+      // TODO 修改to: "xialingling@tiemao.cn",
+      const msg = {
+        to: "xialingling@tiemao.cn",
+        subject: "申请表请求通知",
+        html: hostEmailhtml(mainHost, newVisitor, newVisitForm, companions)
+      };
+      // 将发送任务放在了到消息队列里
+      await hostMailProducer(msg);
 
       // 生成二维码链接路径部分
       const qrCodeLink = `/visitor-check/${newVisitForm.id}`;

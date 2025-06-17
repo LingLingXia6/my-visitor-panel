@@ -1,4 +1,5 @@
 const { setParamter, setPagination } = require("../utils/tools");
+const {visitorMailProducer,} = require("../utils/rabbit-mq");
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
@@ -80,7 +81,7 @@ router.get("/", async (req, res) => {
       include: [
         {
           model: db.Visitors,
-          attributes: ["id", "name", "phone", "id_card", "company"],
+          attributes: ["id", "name", "phone", "id_card", "company","email"],
           // 不在这里直接筛选访客
           required: false,
         },
@@ -222,7 +223,7 @@ router.post('/approve', [
       include: [
         {
           model: db.Visitors,
-          attributes: ['id', 'name', 'phone', 'id_card', 'company']
+          attributes: ['id', 'name', 'phone', 'company',"email"]
         },
         {
           model: db.Host,
@@ -231,7 +232,22 @@ router.post('/approve', [
         }
       ]
     });
-
+    updatedForm?. Visitors?.forEach( async (visitor )=> {
+       // TODO 修改邮件发送人
+       if(visitor?.email){
+        const msg={
+          name:visitor?.name,
+          to:visitor?.email,
+          approved:approved,
+          subject: `访问表单审批状态已${approved ? '通过' : '拒绝'}`,
+          formId:updatedForm.id,
+          link:`${process.env.FRONTEND_URL}/visitor-check/${updatedForm.id}`,
+        }
+        await visitorMailProducer(msg)
+       }
+    
+    });
+   
     res.json({
       status: true,
       message: `访问表单审批状态已${approved ? '通过' : '拒绝'}`,

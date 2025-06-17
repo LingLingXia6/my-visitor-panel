@@ -22,15 +22,22 @@ const transporter = nodemailer.createTransport({
  * @param email
  * @param subject
  * @param html
+ * @param attachments - 可选的附件数组
  * @returns {Promise<void>}
  */
-const sendMail = async (email, subject, html) => {
-  await transporter.sendMail({
+const sendMail = async (email, subject, html, attachments = []) => {
+  const mailOptions = {
     from: process.env.MAILER_USER,
     to: email,
     subject,
     html,
-  });
+  };
+  
+  if (attachments && attachments.length > 0) {
+    mailOptions.attachments = attachments;
+  }
+  
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendMail;
