@@ -9,6 +9,7 @@ const usersRouter = require('./routes/users');
 const visitorsRouter = require("./routes/visitors");
 const hostsRouter = require("./routes/hosts");
 const formsRouter = require("./routes/forms");
+const dashboardRouter=require("./routes/dashboard");
 const { hostMailConsumer ,visitorMailConsumer} = require("./utils/rabbit-mq");
 (async () => {
   await hostMailConsumer();
@@ -34,4 +35,5 @@ app.use("/visitors", visitorsRouter);
 app.use("/hosts", hostsRouter);
 app.use("/forms", formsRouter);
 app.use("/users", usersRouter);
+app.use("/dashboard", dashboardRouter);
 module.exports = app;

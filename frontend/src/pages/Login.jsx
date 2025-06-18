@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Checkbox } from "antd";
 import {
   UserOutlined,
@@ -11,16 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../api/user";
 import Cookies from "js-cookie";
 import logo from "../images/logo.png";
-import "./Login.css";
+import styles from "./Login.module.css";
 
 // 浮动粒子组件
 const FloatingParticles = () => {
   return (
-    <div className="floating-particles">
+    <div className={styles.floatingParticles}>
       {[...Array(12)].map((_, i) => (
         <div 
           key={i} 
-          className={`particle particle-${i + 1}`}
+          className={`${styles.particle} ${styles[`particle${i + 1}`]}`}
           style={{
             left: `${Math.random() * 100}%`,
             animationDelay: `${Math.random() * 10}s`,
@@ -35,8 +35,8 @@ const FloatingParticles = () => {
 // SVG波浪装饰组件
 const WaveDecoration = () => {
   return (
-    <div className="wave-decoration">
-      <svg className="wave-svg" viewBox="0 0 100 800" preserveAspectRatio="none">
+    <div className={styles.waveDecoration}>
+      <svg className={styles.waveSvg} viewBox="0 0 100 800" preserveAspectRatio="none">
         <defs>
           <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(148, 163, 184, 0.15)" />
@@ -49,12 +49,12 @@ const WaveDecoration = () => {
           </linearGradient>
         </defs>
         <path 
-          className="wave-path-1"
+          className={styles.wavePath1}
           fill="url(#waveGradient1)" 
           d="M0,0 C30,100 70,200 100,300 C70,400 30,500 0,600 C30,700 70,800 100,900 L100,0 L0,0"
         />
         <path 
-          className="wave-path-2"
+          className={styles.wavePath2}
           fill="url(#waveGradient2)" 
           d="M0,100 C30,200 70,300 100,400 C70,500 30,600 0,700 C30,800 70,900 100,1000 L100,100 L0,100"
         />
@@ -66,10 +66,10 @@ const WaveDecoration = () => {
 // 动态背景光效组件
 const DynamicBackground = () => {
   return (
-    <div className="dynamic-background">
-      <div className="gradient-orb orb-1"></div>
-      <div className="gradient-orb orb-2"></div>
-      <div className="gradient-orb orb-3"></div>
+    <div className={styles.dynamicBackground}>
+      <div className={`${styles.gradientOrb} ${styles.orb1}`}></div>
+      <div className={`${styles.gradientOrb} ${styles.orb2}`}></div>
+      <div className={`${styles.gradientOrb} ${styles.orb3}`}></div>
     </div>
   );
 };
@@ -124,27 +124,27 @@ const Login = () => {
   };
 
   return (
-    <div className={`login-container ${isLoaded ? "loaded" : ""}`}>
+    <div className={`${styles.loginContainer} ${isLoaded ? styles.loaded : ""}`}>
       {/* 左侧品牌区域 */}
-      <div className="left-panel">
+      <div className={styles.leftPanel}>
         {/* 动态背景光效 */}
         <DynamicBackground />
         
         {/* 几何图案背景 */}
-        <div className="pattern-background"></div>
+        <div className={styles.patternBackground}></div>
         
         {/* 浮动粒子 */}
         <FloatingParticles />
         
         {/* 品牌信息 */}
-        <div className="brand-info">
-          <div className="logo-section">
-            <div className="logo-wrapper">
-              <i className="logo-icon">🏢</i>
+        <div className={styles.brandInfo}>
+          <div className={styles.logoSection}>
+            <div className={styles.logoWrapper}>
+              <i className={styles.logoIcon}>🏢</i>
             </div>
-            <div className="company-details">
-              <div className="company-name">铁锚科技</div>
-              <div className="company-subtitle">TM Technology</div>
+            <div className={styles.companyDetails}>
+              <div className={styles.companyName}>铁锚科技</div>
+              <div className={styles.companySubtitle}>TM Technology</div>
             </div>
           </div>
         </div>
@@ -154,18 +154,18 @@ const Login = () => {
       </div>
 
       {/* 右侧登录区域 */}
-      <div className="right-panel">
-        <div className={`login-card ${formVisible ? "visible" : ""}`}>
-          <div className="card-header">
-            <h1 className="card-title">铁锚科技访客管理系统</h1>
-            <p className="card-subtitle">欢迎使用智能访客管理系统</p>
+      <div className={styles.rightPanel}>
+        <div className={`${styles.loginCard} ${formVisible ? styles.visible : ""}`}>
+          <div className={styles.cardHeader}>
+            <h1 className={styles.cardTitle}>铁锚科技访客管理系统</h1>
+            <p className={styles.cardSubtitle}>欢迎使用智能访客管理系统</p>
           </div>
 
           <Form
             name="login"
             initialValues={{ remember: rememberMe }}
             onFinish={onFinish}
-            className="login-form"
+            className={styles.loginForm}
             autoComplete="off"
             layout="vertical"
           >
@@ -173,15 +173,15 @@ const Login = () => {
             <Form.Item
               name="login"
               rules={[{ required: true, message: "请输入用户名!" }]}
-              className="form-item"
+              className={styles.formItem}
             >
-              <div className="input-wrapper">
-                <div className="input-icon-wrapper">
-                  <UserOutlined className="input-icon" />
+              <div className={styles.inputWrapper}>
+                <div className={styles.inputIconWrapper}>
+                  <UserOutlined className={styles.inputIcon} />
                 </div>
                 <Input
                   placeholder="请输入用户名"
-                  className="custom-input"
+                  className={styles.customInput}
                   size="large"
                 />
               </div>
@@ -191,15 +191,15 @@ const Login = () => {
             <Form.Item
               name="password"
               rules={[{ required: true, message: "请输入密码!" }]}
-              className="form-item"
+              className={styles.formItem}
             >
-              <div className="input-wrapper">
-                <div className="input-icon-wrapper">
-                  <LockOutlined className="input-icon" />
+              <div className={styles.inputWrapper}>
+                <div className={styles.inputIconWrapper}>
+                  <LockOutlined className={styles.inputIcon} />
                 </div>
                 <Input.Password
                   placeholder="请输入密码"
-                  className="custom-input"
+                  className={styles.customInput}
                   size="large"
                   iconRender={(visible) =>
                     visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
@@ -209,19 +209,19 @@ const Login = () => {
             </Form.Item>
 
             {/* 验证码 */}
-            <div className="verification-row">
+            <div className={styles.verificationRow}>
               <Form.Item
                 name="verificationCode"
                 rules={[{ required: true, message: "请输入验证码!" }]}
-                className="verification-item"
+                className={styles.verificationItem}
               >
-                <div className="input-wrapper">
-                  <div className="input-icon-wrapper">
-                    <SafetyOutlined className="input-icon" />
+                <div className={styles.inputWrapper}>
+                  <div className={styles.inputIconWrapper}>
+                    <SafetyOutlined className={styles.inputIcon} />
                   </div>
                   <Input
                     placeholder="请输入验证码"
-                    className="custom-input"
+                    className={styles.customInput}
                     size="large"
                     value={inputCode}
                     onChange={(e) => setInputCode(e.target.value)}
@@ -230,7 +230,7 @@ const Login = () => {
               </Form.Item>
               <button
                 type="button"
-                className="verification-btn"
+                className={styles.verificationBtn}
                 onClick={generateCode}
               >
                 {verificationCode}
@@ -238,27 +238,27 @@ const Login = () => {
             </div>
 
             {/* 记住密码和忘记密码 */}
-            <div className="form-options">
-              <div className="remember-section">
+            <div className={styles.formOptions}>
+              <div className={styles.rememberSection}>
                 <Checkbox
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="custom-checkbox"
+                  className={styles.customCheckbox}
                 >
                   记住密码
                 </Checkbox>
               </div>
-              <a href="#" className="forgot-link">
+              <a href="#" className={styles.forgotLink}>
                 忘记密码？
               </a>
             </div>
 
             {/* 登录按钮 */}
-            <Form.Item className="submit-section">
+            <Form.Item className={styles.submitSection}>
               <Button
                 type="primary"
                 htmlType="submit"
-                className="login-btn"
+                className={styles.loginBtn}
                 size="large"
                 block
               >
@@ -267,7 +267,7 @@ const Login = () => {
             </Form.Item>
           </Form>
 
-          <div className="card-footer">
+          <div className={styles.cardFooter}>
             <p>© 2025 铁锚科技 版权所有</p>
           </div>
         </div>

@@ -40,6 +40,16 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'VisitorsForms',
+    indexes: [
+      {
+        name: 'idx_visit_time',
+        fields: ['visit_time']
+      },
+      {
+        name: 'idx_visit_time_approved',
+        fields: ['visit_time', 'approved']
+      }
+    ]
   });
   return VisitorsForms;
 };

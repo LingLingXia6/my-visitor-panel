@@ -10,7 +10,7 @@ body {
 }
 
 /* 登录容器 */
-.login-container {
+.loginContainer {
   min-height: 100vh;
   display: flex;
   background: #f9fafb;
@@ -19,13 +19,13 @@ body {
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.login-container.loaded {
+.loginContainer.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* 左侧品牌区域 */
-.left-panel {
+.leftPanel {
   width: 50%;
   background: linear-gradient(135deg, #334155 0%, #1e293b 50%, #0f172a 100%);
   position: relative;
@@ -36,14 +36,14 @@ body {
 }
 
 /* 动态背景光效 */
-.dynamic-background {
+.dynamicBackground {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
 }
 
-.gradient-orb {
+.gradientOrb {
   position: absolute;
   border-radius: 50%;
   filter: blur(60px);
@@ -51,7 +51,7 @@ body {
   animation: orbFloat 15s ease-in-out infinite;
 }
 
-.orb-1 {
+.orb1 {
   width: 300px;
   height: 300px;
   background: radial-gradient(circle, rgba(148, 163, 184, 0.4) 0%, rgba(148, 163, 184, 0.1) 50%, transparent 100%);
@@ -60,7 +60,7 @@ body {
   animation-delay: 0s;
 }
 
-.orb-2 {
+.orb2 {
   width: 200px;
   height: 200px;
   background: radial-gradient(circle, rgba(203, 213, 225, 0.3) 0%, rgba(203, 213, 225, 0.1) 50%, transparent 100%);
@@ -69,7 +69,7 @@ body {
   animation-delay: -5s;
 }
 
-.orb-3 {
+.orb3 {
   width: 250px;
   height: 250px;
   background: radial-gradient(circle, rgba(226, 232, 240, 0.2) 0%, rgba(226, 232, 240, 0.05) 50%, transparent 100%);
@@ -94,7 +94,7 @@ body {
 }
 
 /* 几何图案背景 */
-.pattern-background {
+.patternBackground {
   position: absolute;
   inset: 0;
   opacity: 0.08;
@@ -115,7 +115,7 @@ body {
 }
 
 /* 浮动粒子 */
-.floating-particles {
+.floatingParticles {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -166,7 +166,7 @@ body {
 }
 
 /* 品牌信息 */
-.brand-info {
+.brandInfo {
   position: relative;
   z-index: 10;
   opacity: 0;
@@ -174,7 +174,7 @@ body {
   animation: slideInUp 1s ease 0.5s forwards;
 }
 
-.logo-section {
+.logoSection {
   display: flex;
   align-items: center;
   backdrop-filter: blur(12px);
@@ -186,13 +186,13 @@ body {
   transition: all 0.3s ease;
 }
 
-.logo-section:hover {
+.logoSection:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   background: rgba(255, 255, 255, 0.12);
 }
 
-.logo-wrapper {
+.logoWrapper {
   width: 2.5rem;
   height: 2.5rem;
   background: rgba(255, 255, 255, 0.15);
@@ -213,16 +213,16 @@ body {
   }
 }
 
-.logo-icon {
+.logoIcon {
   font-size: 1.25rem;
   filter: grayscale(1) brightness(0) invert(1);
 }
 
-.company-details {
+.companyDetails {
   color: white;
 }
 
-.company-name {
+.companyName {
   color: #e2e8f0;
   font-weight: 600;
   font-size: 1.125rem;
@@ -230,7 +230,7 @@ body {
   animation: textShimmer 4s ease-in-out infinite;
 }
 
-.company-subtitle {
+.companySubtitle {
   color: rgba(226, 232, 240, 0.7);
   font-size: 0.75rem;
   margin: 0;
@@ -247,7 +247,7 @@ body {
 }
 
 /* SVG波浪装饰 */
-.wave-decoration {
+.waveDecoration {
   position: absolute;
   right: 0;
   top: 0;
@@ -256,17 +256,17 @@ body {
   pointer-events: none;
 }
 
-.wave-svg {
+.waveSvg {
   width: 100%;
   height: 100%;
 }
 
-.wave-path-1 {
+.wavePath1 {
   animation: waveFloat1 10s ease-in-out infinite;
   transform-origin: center;
 }
 
-.wave-path-2 {
+.wavePath2 {
   animation: waveFloat2 12s ease-in-out infinite;
   transform-origin: center;
 }
@@ -306,7 +306,7 @@ body {
 }
 
 /* 右侧登录区域 */
-.right-panel {
+.rightPanel {
   width: 60%;
   display: flex;
   align-items: center;
@@ -316,7 +316,7 @@ body {
 }
 
 /* 登录卡片 */
-.login-card {
+.loginCard {
   width: 100%;
   max-width: 36rem;
   background: rgba(255, 255, 255, 0.8);
@@ -330,25 +330,25 @@ body {
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.login-card.visible {
+.loginCard.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* 卡片头部 */
-.card-header {
+.cardHeader {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.card-title {
+.cardTitle {
   font-size: 1.5rem;
   font-weight: 700;
   color: #374151;
   margin-bottom: 0.5rem;
 }
 
-.card-subtitle {
+.cardSubtitle {
   color: #6b7280;
   font-size: 0.875rem;
   margin: 0;
@@ -357,26 +357,26 @@ body {
 }
 
 /* 表单样式 */
-.login-form {
+.loginForm {
   width: 100%;
 }
 
-.form-item {
+.formItem {
   margin-bottom: 1rem;
 }
 
-.form-item .ant-form-item {
+.formItem .ant-form-item {
   margin-bottom: 0;
 }
 
 /* 输入框包装器 */
-.input-wrapper {
+.inputWrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.input-icon-wrapper {
+.inputIconWrapper {
   position: absolute;
   left: 0;
   top: 0;
@@ -388,13 +388,13 @@ body {
   z-index: 2;
 }
 
-.input-icon {
+.inputIcon {
   color: #9ca3af;
   font-size: 1rem;
 }
 
 /* 自定义输入框 */
-.custom-input {
+.customInput {
   padding: 0.875rem 0.75rem 0.875rem 2.5rem !important;
   background: rgba(249, 250, 251, 0.5) !important;
   border: 1px solid #e5e7eb !important;
@@ -403,34 +403,34 @@ body {
   transition: all 0.3s ease !important;
 }
 
-.custom-input:hover {
+.customInput:hover {
   border-color: #94a3b8 !important;
 }
 
-.custom-input:focus,
-.custom-input.ant-input-focused {
+.customInput:focus,
+.customInput.ant-input-focused {
   border-color: #94a3b8 !important;
   box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.1) !important;
   outline: none !important;
 }
 
 /* 验证码行 */
-.verification-row {
+.verificationRow {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.verification-item {
+.verificationItem {
   flex: 1;
   margin-bottom: 0 !important;
 }
 
-.verification-item .ant-form-item {
+.verificationItem .ant-form-item {
   margin-bottom: 0;
 }
 
-.verification-btn {
+.verificationBtn {
   background: rgba(148, 163, 184, 0.9);
   color: white;
   padding: 0.5rem 1.25rem;
@@ -449,61 +449,61 @@ body {
   justify-content: center;
 }
 
-.verification-btn:hover {
+.verificationBtn:hover {
   background: #94a3b8;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(148, 163, 184, 0.3);
 }
 
-.verification-btn:active {
+.verificationBtn:active {
   transform: translateY(0);
 }
 
 /* 表单选项 */
-.form-options {
+.formOptions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.remember-section {
+.rememberSection {
   display: flex;
   align-items: center;
 }
 
-.custom-checkbox {
+.customCheckbox {
   color: #374151;
   font-size: 0.875rem;
 }
 
-.custom-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+.customCheckbox .ant-checkbox-checked .ant-checkbox-inner {
   background-color: #94a3b8;
   border-color: #94a3b8;
 }
 
-.forgot-link {
+.forgotLink {
   color: #94a3b8;
   text-decoration: none;
   font-size: 0.875rem;
   transition: opacity 0.2s ease;
 }
 
-.forgot-link:hover {
+.forgotLink:hover {
   opacity: 0.8;
   color: #94a3b8;
 }
 
 /* 提交按钮 */
-.submit-section {
+.submitSection {
   margin-bottom: 2rem;
 }
 
-.submit-section .ant-form-item {
+.submitSection .ant-form-item {
   margin-bottom: 0;
 }
 
-.login-btn {
+.loginBtn {
   height: 52px !important;
   border-radius: 0.75rem !important;
   background: rgba(148, 163, 184, 0.9) !important;
@@ -514,28 +514,28 @@ body {
   box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2) !important;
 }
 
-.login-btn:hover {
+.loginBtn:hover {
   background: #94a3b8 !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 16px rgba(148, 163, 184, 0.3) !important;
 }
 
-.login-btn:active {
+.loginBtn:active {
   transform: translateY(0) !important;
 }
 
-.login-btn:focus {
+.loginBtn:focus {
   box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.2) !important;
 }
 
 /* 卡片底部 */
-.card-footer {
+.cardFooter {
   text-align: center;
   border-top: 1px solid #f3f4f6;
   padding-top: 1.5rem;
 }
 
-.card-footer p {
+.cardFooter p {
   color: #6b7280;
   font-size: 0.75rem;
   margin: 0;
@@ -555,50 +555,50 @@ body {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .login-container {
+  .loginContainer {
     flex-direction: column;
   }
   
-  .left-panel {
+  .leftPanel {
     width: 100%;
     height: 40vh;
     min-height: 300px;
   }
   
-  .right-panel {
+  .rightPanel {
     width: 100%;
   }
   
-  .login-card {
+  .loginCard {
     max-width: none;
     margin: 1rem;
     padding: 2rem;
   }
   
-  .wave-decoration {
+  .waveDecoration {
     display: none;
   }
   
-  .floating-particles {
+  .floatingParticles {
     display: none;
   }
   
-  .dynamic-background {
+  .dynamicBackground {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .login-card {
+  .loginCard {
     padding: 1.5rem;
   }
   
-  .verification-row {
+  .verificationRow {
     flex-direction: column;
     gap: 1rem;
   }
   
-  .verification-btn {
+  .verificationBtn {
     width: 100%;
   }
 }

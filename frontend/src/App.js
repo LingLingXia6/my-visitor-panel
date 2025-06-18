@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -6,26 +6,43 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Spin } from "antd";
 import zhCN from "antd/lib/locale/zh_CN";
-import MainLayout from "./layouts/MainLayout";
-import Login from "./pages/Login";
 import Cookies from "js-cookie";
-import Users from "./pages/Users";
-import ChangePassword from "./pages/ChangePassword";
-import NotFound from "./pages/NotFound";
-import VisitorPage from "./pages/VisitorPage";
-import VisitFormList from "./pages/VisitFormList";
-import VisitorList from "./pages/VisitorList";
-import VisitorCheck from "./pages/VisitorCheck";
-import HostInfo from "./pages/HostInfo";
 import { UserProvider } from "./context/UserContext";
+
+// 懒加载组件
+const MainLayout = React.lazy(() => import("./layouts/MainLayout"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Users = React.lazy(() => import("./pages/Users"));
+const ChangePassword = React.lazy(() => import("./pages/ChangePassword"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
+const VisitorPage = React.lazy(() => import("./pages/VisitorPage"));
+const VisitFormList = React.lazy(() => import("./pages/VisitFormList"));
+const VisitorList = React.lazy(() => import("./pages/VisitorList"));
+const VisitorCheck = React.lazy(() => import("./pages/VisitorCheck"));
+const HostInfo = React.lazy(() => import("./pages/HostInfo"));
+const Dashboard = React.lazy(() => import("./pages/dashboard/Dashboard"));
+
+// 加载中组件
+const LoadingSpinner = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh' 
+  }}>
+    <Spin size="large" tip="页面加载中..." />
+  </div>
+);
 
 // 获取token用于路由守卫
 const getToken = () => Cookies.get("token");
 
 // 主应用路由配置
 const PRIVATE_ROUTES = [
+  // 仪表盘
+  { path: "dashboard", element: <Dashboard />, icon: "Dashboard" },
   // 系统管理路由
   { path: "change-password", element: <ChangePassword />, icon: "Lock" },
   { path: "users", element: <Users />, icon: "Team" },
@@ -62,19 +79,21 @@ function App() {
     <UserProvider>
       <ConfigProvider locale={zhCN}>
         <BrowserRouter>
-          <Routes>
-            {/* 对外公共页面 */}
-            {PublicRoute()}
-            {/* 路由守卫的页面 */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/" element={<MainLayout routes={PRIVATE_ROUTES} />}>
-                {PrivateRoutes()}
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              {/* 对外公共页面 */}
+              {PublicRoute()}
+              {/* 路由守卫的页面 */}
+              <Route element={<PrivateRoute />}>
+                <Route path="/" element={<MainLayout routes={PRIVATE_ROUTES} />}>
+                  {PrivateRoutes()}
+                </Route>
               </Route>
-            </Route>
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </ConfigProvider>
     </UserProvider>

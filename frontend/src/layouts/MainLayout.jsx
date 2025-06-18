@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Layout, Menu, Avatar, Dropdown, message } from "antd";
 import {
   MenuUnfoldOutlined,
@@ -10,6 +10,7 @@ import {
   LockOutlined,
   FormOutlined,
   UnorderedListOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import RouteChangeListener from "../components/RouteChangeListener";
@@ -53,10 +54,12 @@ const MainLayout = () => {
 
     // 路径与菜单键值的映射关系
     const pathToKeyMap = {
-      "/visitor": "0",
-      "/forms": "1",
-      "/visitors": "2",
-      "/change-password": "4",
+      "/dashboard": "0",
+      "/visitor": "1",
+      "/forms": "2",
+      "/visitors": "3",
+      "/host-info": "4",
+      "/change-password": "5",
     };
 
     console.log("pathname", pathname);
@@ -95,27 +98,32 @@ const MainLayout = () => {
   const sideMenuItems = [
     {
       key: "0",
+      icon: <DashboardOutlined />,
+      label: <Link to="/dashboard">仪表盘</Link>,
+    },
+    {
+      key: "1",
       icon: <FormOutlined />,
       label: <Link to="/visitor">访客在线申请表</Link>,
     },
     {
-      key: "1",
+      key: "2",
       icon: <UnorderedListOutlined />,
       label: <Link to="/forms">访客申请单</Link>,
     },
     {
-      key: "2",
+      key: "3",
       icon: <UserOutlined />,
       label: <Link to="/visitors">访客信息</Link>,
       path: "/visitors",
     },
     {
-      key: "3",
+      key: "4",
       icon: <UnorderedListOutlined />,
       label: <Link to="/host-info">被拜访人信息</Link>,
     },
     {
-      key: "4",
+      key: "5",
       icon: <LockOutlined />,
       label: <Link to="/change-password">修改密码</Link>,
     },
