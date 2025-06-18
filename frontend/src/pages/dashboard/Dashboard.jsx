@@ -3,6 +3,8 @@ import { Row, Col } from 'antd';
 import DashboardStats from './DashboardStats';
 import DashboardTrends from './DashboardTrends';
 import DashboardTopVisitors from './DashboardTopVisitors';
+import DashboardTopHosts from './DashboardTopHosts';
+import DashboardFormApproval from './DashboardFormApproval';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -12,12 +14,17 @@ const Dashboard = () => {
         <Col span={24}>
           <DashboardStats />
         </Col>
-       
-        <Col span={18}>
+        <Col span={8}>
+          <DashboardFormApproval />
+        </Col> 
+        <Col span={16}>
           <DashboardTrends />
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <DashboardTopVisitors />
+        </Col>
+        <Col span={16}>
+          <DashboardTopHosts />
         </Col>
       </Row>
     </div>

@@ -286,4 +286,58 @@ router.get('/top-hosts', async (req, res) => {
   }
 });
 
+/**
+ * 获取访客表单审核情况统计
+ * GET /dashboard/form-approval-stats
+ * 返回：已审核、未审核的表单数量统计
+ */
+router.get('/form-approval-stats', async (req, res) => {
+  try {
+    // 查询已审核的表单数量（approved = true）
+    const approvedQuery = `
+      SELECT COUNT(*) AS count 
+      FROM VisitorsForms 
+      WHERE approved = true
+    `;
+    
+    // 查询未审核的表单数量（approved = false 或 approved IS NULL）
+    const pendingQuery = `
+      SELECT COUNT(*) AS count 
+      FROM VisitorsForms 
+      WHERE approved = false OR approved IS NULL
+    `;
+    
+    // 查询总表单数量
+    const totalQuery = `
+      SELECT COUNT(*) AS count 
+      FROM VisitorsForms
+    `;
+    
+    // 并行执行所有查询
+    const [approvedResult, pendingResult, totalResult] = await Promise.all([
+      sequelize.query(approvedQuery, { type: QueryTypes.SELECT }),
+      sequelize.query(pendingQuery, { type: QueryTypes.SELECT }),
+      sequelize.query(totalQuery, { type: QueryTypes.SELECT })
+    ]);
+    
+    // 构造返回数据
+    const stats = {
+      approved: approvedResult[0]?.count || 0,      // 已审核
+      pending: pendingResult[0]?.count || 0,        // 未审核
+      total: totalResult[0]?.count || 0,            // 总数
+      approvalRate: totalResult[0]?.count > 0 
+        ? ((approvedResult[0]?.count || 0) / totalResult[0].count * 100).toFixed(2) 
+        : '0.00'  // 审核率百分比
+    };
+    
+    return success(res, '表单审核情况统计获取成功', stats);
+    
+  } catch (error) {
+    console.error('获取表单审核情况统计失败:', error);
+    return failure(res, error);
+  }
+});
+
+
+
 module.exports = router;

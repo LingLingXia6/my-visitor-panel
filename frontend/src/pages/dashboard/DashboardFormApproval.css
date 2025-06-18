@@ -1,0 +1,184 @@
+/* 主卡片样式 */
+.form-approval-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+  height: 100%;
+}
+
+.form-approval-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px 24px;
+}
+
+.form-approval-card .ant-card-head-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+}
+
+.form-approval-card .ant-card-body {
+  padding: 24px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  flex-direction: column;
+}
+
+.loading-container .ant-spin-text {
+  color: #666;
+  margin-top: 12px;
+}
+
+/* 图表容器样式 */
+.chart-container {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 20px 0;
+}
+
+.pie-chart-wrapper {
+  flex-shrink: 0;
+}
+
+/* 自定义图例样式 */
+.custom-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 14px;
+  color: #262626;
+  font-weight: 500;
+  flex: 1;
+}
+
+.legend-percentage {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* 自定义Tooltip样式 */
+.custom-tooltip {
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip-title {
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tooltip-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tooltip-label {
+  font-weight: 500;
+  color: #ccc;
+}
+
+.tooltip-value {
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .chart-content {
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+  
+  .custom-legend {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .form-approval-card .ant-card-body {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-content {
+    gap: 16px;
+  }
+  
+  .legend-item {
+    gap: 8px;
+  }
+  
+  .legend-label {
+    font-size: 13px;
+  }
+  
+  .legend-percentage {
+    font-size: 14px;
+  }
+}
+
+/* 动画效果 */
+.chart-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
