@@ -146,9 +146,20 @@ const MainLayout = () => {
               collapsed ? "logo-container-collapsed" : "logo-container-expanded"
             }`}
           >
-            {!collapsed && <span>访客管理系统</span>}
+            {!collapsed && (
+              <>
+                <div className="logo-title">LING BLESSED</div>
+                <div className="logo-subtitle">YOUR DONATION APP</div>
+              </>
+            )}
             {collapsed && <CustomerServiceOutlined />}
           </div>
+          {!collapsed && (
+            <div className="new-campaign-btn">
+              <span>New campaign</span>
+              <span style={{ marginLeft: '8px' }}>⊕</span>
+            </div>
+          )}
           <Menu
             ref={menuRef}
             theme="light"
