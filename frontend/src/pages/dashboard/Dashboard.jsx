@@ -12,10 +12,11 @@ const Dashboard = () => {
         <Col span={24}>
           <DashboardStats />
         </Col>
-        <Col span={12}>
+       
+        <Col span={18}>
           <DashboardTrends />
         </Col>
-        <Col span={12}>
+        <Col span={6}>
           <DashboardTopVisitors />
         </Col>
       </Row>

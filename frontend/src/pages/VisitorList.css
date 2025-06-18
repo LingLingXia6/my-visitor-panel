@@ -2,7 +2,7 @@
   padding: 24px;
 }
 
-.card-title {
+.visitor-list-container .card-title {
   display: flex;
   align-items: center;
 }

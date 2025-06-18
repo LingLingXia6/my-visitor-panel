@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Table, Spin, message } from 'antd';
-import { PhoneOutlined, BankOutlined, NumberOutlined } from '@ant-design/icons';
 import './DashboardTopVisitors.css';
 
 const DashboardTopVisitors = () => {
@@ -32,58 +31,35 @@ const DashboardTopVisitors = () => {
 
   const columns = [
     {
-      title: '排名',
-      dataIndex: 'rank',
-      key: 'rank',
-      width: 80,
-      align: 'center',
-      render: (text, record, index) => {
-        const rank = index + 1;
-        return (
-          <div className="rank-number">
-            <span className="rank-text">{rank}</span>
-          </div>
-        );
-      }
-    },
-    {
-      title: '访客信息',
+      title: '姓名',
       dataIndex: 'name',
-      key: 'visitor_info',
-      render: (text, record) => (
-        <div className="visitor-info">
-          <div className="visitor-details">
-            <div className="visitor-name">{text}</div>
-            <div className="company-name">{record.company || '未填写'}</div>
-          </div>
-        </div>
-      )
-    },
-
-    {
-      title: '联系电话',
-      dataIndex: 'phone',
-      key: 'phone',
+      key: 'name',
+      width: 100,
       render: (text) => (
-        <div className="phone-info">
-          <PhoneOutlined className="phone-icon" />
-          <span className="phone-number">{text}</span>
+        <div className="visitor-name">{text}</div>
+      )
+    },
+    {
+      title: '公司',
+      dataIndex: 'company',
+      key: 'company',
+      width: 150,
+      render: (company) => (
+        <div className="company-info">
+        
+          <span>{company || '未填写'}</span>
         </div>
       )
     },
     {
-      title: '访问次数',
+      title: '次数',
       dataIndex: 'form_count',
       key: 'form_count',
-      width: 120,
+      width: 60,
       align: 'center',
       sorter: (a, b) => b.form_count - a.form_count,
       render: (count) => (
-        <div className="visit-count">
-          <NumberOutlined className="count-icon" />
-          <span className="count-number">{count}</span>
-          <span className="count-unit">次</span>
-        </div>
+        <span className="count-number">{count}</span>
       )
     }
   ];
@@ -93,14 +69,10 @@ const DashboardTopVisitors = () => {
       className="top-visitors-card"
       title={
         <div className="card-title">
-          🏆 排名前10访客
+          👥 排名前10访客
         </div>
       }
-      extra={
-        <div className="card-extra">
-          <span className="total-count">共 {topVisitors.length} 位访客</span>
-        </div>
-      }
+     
     >
       {loading ? (
         <div className="loading-container">
@@ -114,7 +86,7 @@ const DashboardTopVisitors = () => {
           pagination={false}
           className="visitors-table"
           size="small"
-          scroll={{ x: 800 }}
+          scroll={{ x: 320 }}
         />
       )}
     </Card>

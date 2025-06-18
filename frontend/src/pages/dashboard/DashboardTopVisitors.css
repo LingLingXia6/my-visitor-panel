@@ -13,11 +13,11 @@
 .top-visitors-card .ant-card-head {
   border-bottom: 1px solid rgba(148, 163, 184, 0.1);
   background: rgba(248, 250, 252, 0.5);
-  padding: 16px 24px;
+  padding: 12px 16px;
 }
 
 .top-visitors-card .ant-card-body {
-  padding: 16px;
+  padding: 12px;
   background: transparent;
   flex: 1;
   overflow: hidden;
@@ -25,7 +25,7 @@
 
 .card-title {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: normal;
   background: linear-gradient(135deg, #f59e0b, #d97706);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -64,6 +64,7 @@
 
 .visitors-table .ant-table {
   background: transparent;
+  font-size: 13px;
 }
 
 .visitors-table .ant-table-thead > tr > th {
@@ -71,7 +72,7 @@
   border-bottom: 2px solid rgba(148, 163, 184, 0.2);
   font-weight: 600;
   color: #374151;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .visitors-table .ant-table-tbody > tr {
@@ -85,9 +86,14 @@
 }
 
 .visitors-table .ant-table-tbody > tr > td {
-  padding: 8px 6px;
+  padding: 1px 3px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.1);
   vertical-align: middle;
+  font-size: 13px;
+}
+
+.visitors-table .ant-table-thead > tr > th {
+  padding: 4px 3px;
 }
 
 /* 排名样式 */
