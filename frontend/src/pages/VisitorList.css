@@ -44,82 +44,147 @@
 /* 在现有样式基础上添加 */
 
 /* 基础容器样式 */
-/* 清理重复样式，保留最新的定义 */
 .visitor-list-container {
-  padding: 20px;
-  background-color: #f9f9f9;
-  min-height: 100%;
+  padding: 24px;
+  
+  min-height: 100vh;
 }
 
 /* 卡片样式 */
 .visitor-card {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: none;
+  background: #ffffff;
+  overflow: hidden;
 }
 
 .visitor-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 12px 20px;
+  border-bottom: none;
+  padding: 24px 24px 0 24px;
+  background: #ffffff;
 }
 
 .visitor-card .ant-card-head-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.visitor-card .ant-card-body {
+  padding: 24px;
 }
 
 /* 表格样式 */
 .visitor-table {
-  margin-top: 8px;
+  margin-top: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.visitor-table .ant-table {
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .visitor-table .ant-table-thead > tr > th {
-  background-color: #f5f5f5;
-  font-weight: 500;
-  color: #333;
-  padding: 12px 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-weight: 600;
+  color: #495057;
+  padding: 16px 20px;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .visitor-table .ant-table-tbody > tr > td {
-  padding: 12px 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f3f4;
+  font-size: 14px;
+  color: #495057;
 }
 
 .visitor-table .ant-table-tbody > tr:hover > td {
-  background-color: #f0f7ff;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  transform: scale(1.001);
+  transition: all 0.2s ease;
+}
+
+.visitor-table .ant-table-tbody > tr {
+  transition: all 0.2s ease;
+}
+
+.visitor-table .ant-tag {
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-weight: 500;
+  border: none;
+}
+
+.visitor-table .ant-btn-link {
+  color: #667eea;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.visitor-table .ant-btn-link:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #5a67d8;
 }
 
 /* 详情模态框样式 */
 .visitor-detail-modal .ant-modal-content {
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: none;
 }
 
 .visitor-detail-modal .ant-modal-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 24px 24px 16px 24px;
+  border-bottom: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .visitor-detail-modal .ant-modal-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
 }
 
 .visitor-detail-modal .ant-modal-body {
-  padding: 20px;
+  padding: 24px;
+  background: #fafbfc;
+}
+
+.visitor-detail-modal .ant-modal-close {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.visitor-detail-modal .ant-modal-close:hover {
+  color: #f0f0f0;
 }
 
 /* 访客基本信息样式 */
 .visitor-basic-info {
-  background-color: #f5f8ff;
-  border-radius: 8px;
-  padding: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+  margin-bottom: 20px;
 }
 
 .info-row {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .info-row:last-child {
@@ -131,16 +196,31 @@
   min-width: 200px;
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+.info-item:last-child {
+  margin-right: 0;
 }
 
 .info-icon {
-  margin-right: 8px;
-  color: #1890ff;
+  margin-right: 12px;
+  color: #667eea;
+  font-size: 16px;
+}
+
+.info-item span {
+  font-weight: 500;
+  color: #495057;
 }
 
 .info-divider {
-  margin: 20px 0;
+  margin: 24px 0;
+  border-color: #e9ecef;
 }
 
 /* 访问历史标题 */
@@ -170,15 +250,26 @@
 }
 
 .year-collapse .ant-collapse-header {
-  font-weight: 500;
-  padding: 10px 16px;
-  background-color: #f5f5f5;
-  border-radius: 6px !important;
-  color: #333;
+  font-weight: 600;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px !important;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.year-collapse .ant-collapse-header:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .year-collapse .ant-collapse-content-box {
-  padding: 8px 0;
+  padding: 16px 0;
+  background: transparent;
 }
 
 .visit-item {
@@ -246,7 +337,23 @@
 /* 响应式布局 */
 @media (max-width: 768px) {
   .visitor-list-container {
-    padding: 12px;
+    padding: 16px;
+  }
+  
+  .visitor-card {
+    border-radius: 12px;
+  }
+  
+  .visitor-card .ant-card-head {
+    padding: 20px 20px 0 20px;
+  }
+  
+  .visitor-card .ant-card-head-title {
+    font-size: 20px;
+  }
+  
+  .filter-section {
+    padding: 16px;
   }
   
   .info-row {
@@ -255,11 +362,46 @@
   
   .info-item {
     min-width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
   }
   
   .visitor-detail-modal .ant-modal-content {
     max-width: 95vw;
     margin: 0 auto;
+    border-radius: 12px;
+  }
+  
+  .visitor-detail-modal .ant-modal-header {
+    padding: 20px 20px 12px 20px;
+  }
+  
+  .visitor-detail-modal .ant-modal-body {
+    padding: 20px;
+  }
+  
+  .apple-timeline-row {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .apple-timeline-date {
+    min-width: auto;
+    margin-bottom: 8px;
+  }
+  
+  .host-header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+  
+  .host-name {
+    font-size: 14px;
+  }
+  
+  .host-phone {
+    font-size: 12px;
   }
 }
 
@@ -293,16 +435,72 @@
 }
 
 
-/* 添加筛选区域样式 */
+/* 筛选区域样式 */
 .filter-section {
-  margin-bottom: 16px;
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
 }
 
 .filter-form {
   width: 100%;
+}
+
+.filter-form .ant-form-item-label > label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.filter-form .ant-input,
+.filter-form .ant-picker {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.filter-form .ant-input:hover,
+.filter-form .ant-picker:hover {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.filter-form .ant-input:focus,
+.filter-form .ant-picker:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.filter-form .ant-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+  transition: all 0.2s ease;
+}
+
+.filter-form .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.filter-form .ant-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.filter-form .ant-btn-default {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  color: #495057;
+}
+
+.filter-form .ant-btn-default:hover {
+  border-color: #667eea;
+  color: #667eea;
 }
 
 /* 确保在小屏幕上表单项垂直排列 */
@@ -366,32 +564,51 @@
 .host-header {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  background-color: #f5f8ff;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
   cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.host-header:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+}
+
+.host-header:hover .host-name,
+.host-header:hover .host-phone,
+.host-header:hover .host-count {
+  color: #ffffff;
 }
 
 .host-name {
-  font-weight: 500;
-  color: #1890ff;
-  margin-right: 8px;
+  font-weight: 600;
+  color: #667eea;
+  margin-right: 12px;
+  font-size: 16px;
 }
 
 .host-phone {
-  color: #666;
-  font-size: 13px;
+  color: #6c757d;
+  font-size: 14px;
+  margin-right: 16px;
 }
 
 .host-count {
   margin-left: auto;
-  background-color: #e6f7ff;
-  color: #1890ff;
-  padding: 2px 8px;
-  border-radius: 10px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 /* 时间轴样式 - 简约版 */
@@ -549,17 +766,41 @@
   border-top: 1px solid #f2f2f2;
 }
 
-/* 让tab更苹果风 */
+/* 标签页样式 */
+.ant-tabs-nav {
+  margin-bottom: 20px;
+}
+
 .ant-tabs-nav .ant-tabs-tab {
   font-size: 16px;
   font-weight: 500;
-  color: #222;
+  color: #495057;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s ease;
 }
+
+.ant-tabs-nav .ant-tabs-tab:hover {
+  color: #667eea;
+}
+
 .ant-tabs-nav .ant-tabs-tab-active {
-  color: #007aff !important;
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.05);
 }
+
 .ant-tabs-ink-bar {
-  background: #007aff !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  height: 3px !important;
+  border-radius: 2px;
+}
+
+.ant-tabs-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
 }
 
 /* 紧凑时间轴样式 */
@@ -594,40 +835,68 @@
   transition: background 0.2s;
   background: transparent;
 }
+.apple-timeline-row {
+  border-bottom: 1px solid #f1f3f4;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.apple-timeline-row:hover {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
 .apple-timeline-row:last-child {
   border-bottom: none;
+  margin-bottom: 0;
 }
+
 .apple-timeline-icon {
-  color: #007aff;
-  font-size: 17px;
-  margin-right: 6px;
+  color: #667eea;
+  font-size: 16px;
+  margin-right: 8px;
   margin-left: 0;
 }
+
 .apple-timeline-date {
-  min-width: 90px;
-  color: #222;
-  margin-right: 18px;
+  min-width: 100px;
+  color: #495057;
+  margin-right: 20px;
   font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
+
 .apple-timeline-location {
-  color: #007aff;
-  margin-right: 18px;
+  color: #667eea;
+  margin-right: 20px;
+  font-weight: 500;
 }
+
 .apple-timeline-host {
-  color: #444;
-  margin-right: 18px;
+  color: #495057;
+  margin-right: 20px;
   margin-left: 2px;
 }
+
 .apple-timeline-reason {
-  color: #888;
-  margin-right: 18px;
+  color: #6c757d;
+  margin-right: 20px;
 }
+
 .apple-timeline-id {
-  color: #bbb;
-  font-size: 13px;
+  color: #adb5bd;
+  font-size: 12px;
   margin-left: auto;
   margin-right: 0;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
 /* 让折叠面板更简约 */

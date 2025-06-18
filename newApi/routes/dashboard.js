@@ -251,4 +251,39 @@ router.get('/top-visitors', async (req, res) => {
   }
 });
 
+/**
+ * 获取排名前10的主机信息
+ * GET /dashboard/top-hosts
+ * 返回：主机ID、姓名、电话、表单数量
+ */
+router.get('/top-hosts', async (req, res) => {
+  try {
+    const topHostsQuery = `
+      SELECT 
+        fhv.host_id, 
+        h.name, 
+        h.phone, 
+        COUNT(DISTINCT fhv.VisitorsFormId) AS form_count 
+      FROM 
+        FormHostVisitors fhv 
+      JOIN 
+        Host h ON fhv.host_id = h.id 
+      GROUP BY 
+        fhv.host_id, h.name, h.phone 
+      ORDER BY 
+        form_count DESC 
+      LIMIT 10
+    `;
+    
+    // 执行查询
+    const topHostsResult = await sequelize.query(topHostsQuery, { type: QueryTypes.SELECT });
+    
+    return success(res, '排名前10主机数据获取成功', topHostsResult);
+    
+  } catch (error) {
+    console.error('获取排名前10主机数据失败:', error);
+    return failure(res, error);
+  }
+});
+
 module.exports = router;

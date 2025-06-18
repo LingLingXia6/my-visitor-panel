@@ -1,103 +1,145 @@
 /* 主容器样式 */
 .visit-form-list-container {
-  padding: 20px;
+  padding: 24px;
+ 
+  min-height: 100vh;
 }
-.visit-form-list-container .ant-table-tbody > tr:hover > td {
-  background-color: white !important;
-}
-/* 卡片样式 */
+
+/* 卡片样式 - 现代化设计 */
 .visit-form-card {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: none;
+  background: white;
 }
 
 .visit-form-card .ant-card-head {
-  padding: 12px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
 }
 
 .visit-form-card .ant-card-head-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
-/* 表格样式 */
+.visit-form-card .ant-card-body {
+  padding: 24px;
+}
+
+/* 表格样式 - 现代化设计 */
 .visit-form-table {
-  margin-top: 8px;
+  margin-top: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.visit-form-table .ant-table {
+  border-radius: 8px;
 }
 
 .visit-form-table .ant-table-thead > tr > th {
-  background-color: #f5f5f5;
-  font-weight: 500;
-  color: #333;
-  padding: 12px 16px;
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
 }
 
 .visit-form-table .ant-table-tbody > tr > td {
-  padding: 12px 16px;
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .visit-form-table .ant-table-tbody > tr:hover > td {
-  background-color: #f0f7ff;
+  background-color: #f8fafc !important;
+}
+
+.visit-form-table .ant-table-tbody > tr {
+  transition: all 0.2s ease;
 }
 
 .form-id {
-  color: #1890ff;
-  font-weight: 500;
+  color: #3b82f6;
+  font-weight: 600;
+  background-color: #eff6ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
 }
 
 .detail-btn {
-  padding: 0;
-  color: #1890ff;
+  padding: 6px 12px;
+  color: #3b82f6;
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-/* 详情弹窗样式 */
+.detail-btn:hover {
+  background-color: #dbeafe;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+/* 详情弹窗样式 - 现代化设计 */
 .visit-detail-modal .ant-modal-content {
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .visit-detail-modal .ant-modal-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
 }
 
 .visit-detail-modal .ant-modal-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .visit-detail-modal .ant-modal-body {
-  padding: 20px;
+  padding: 24px;
 }
 
-/* 详情内容样式 */
+/* 详情内容样式 - 现代化设计 */
 .visit-form-detail {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .detail-section {
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  background-color: #f8fafc;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #e5e7eb;
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 16px 20px;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  color: #1e293b;
 }
 
 .section-icon {
-  margin-right: 8px;
-  color: #1890ff;
+  margin-right: 10px;
+  color: #3b82f6;
+  font-size: 16px;
 }
 
 .detail-content {
@@ -124,55 +166,60 @@
   color: #333;
 }
 
-/* 随行人员列表样式 */
+/* 随行人员列表样式 - 现代化设计 */
 .companions-list {
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .companion-item {
   background-color: white;
-  border-radius: 6px;
-  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .companion-header {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  background-color: #f5f8ff;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 16px;
+  background-color: #eff6ff;
+  border-bottom: 1px solid #dbeafe;
   justify-content: inherit;
 }
 
 .companion-icon {
-  margin-right: 8px;
-  color: #1890ff;
+  margin-right: 10px;
+  color: #3b82f6;
+  font-size: 16px;
 }
 
 .companion-name {
-  font-weight: 500;
+  font-weight: 600;
+  color: #1e293b;
 }
 
 .companion-details {
-  padding: 12px;
+  padding: 16px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
 .companion-detail {
   display: flex;
   align-items: center;
   min-width: 200px;
+  color: #6b7280;
 }
 
 .detail-icon {
-  margin-right: 8px;
-  color: #1890ff;
+  margin-right: 10px;
+  color: #3b82f6;
+  font-size: 14px;
 }
 
 /* 响应式布局 */
@@ -200,16 +247,75 @@
   }
 }
 
-/* 添加筛选区域样式 */
+/* 筛选区域样式 - 现代化设计 */
 .filter-section {
-  margin-bottom: 16px;
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
 .filter-form {
   width: 100%;
+}
+
+.filter-form .ant-form-item-label > label {
+  color: #374151;
+  font-weight: 500;
+}
+
+.filter-form .ant-input {
+  border-radius: 8px;
+  border-color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.filter-form .ant-input:hover {
+  border-color: #9ca3af;
+}
+
+.filter-form .ant-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-form .ant-picker {
+  border-radius: 8px;
+  border-color: #d1d5db;
+}
+
+.filter-form .ant-picker:hover {
+  border-color: #9ca3af;
+}
+
+.filter-form .ant-btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  border-radius: 8px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+}
+
+.filter-form .ant-btn-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.filter-form .ant-btn-default {
+  border-radius: 8px;
+  border-color: #d1d5db;
+  color: #6b7280;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+}
+
+.filter-form .ant-btn-default:hover {
+  border-color: #9ca3af;
+  color: #374151;
 }
 
 /* 确保在小屏幕上表单项垂直排列 */
@@ -217,4 +323,68 @@
   .filter-form .ant-form-item {
     margin-bottom: 12px;
   }
+}
+
+/* Tag 组件现代化样式 */
+.ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+/* 刷新按钮样式 */
+.visit-form-card .ant-card-extra .ant-btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  border-radius: 8px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+}
+
+.visit-form-card .ant-card-extra .ant-btn-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* 分页组件样式 */
+.visit-form-table .ant-pagination {
+  margin-top: 24px;
+}
+
+.visit-form-table .ant-pagination .ant-pagination-item {
+  border-radius: 6px;
+  border-color: #d1d5db;
+}
+
+.visit-form-table .ant-pagination .ant-pagination-item-active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.visit-form-table .ant-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+/* 操作按钮样式 */
+.ant-popconfirm .ant-btn-primary {
+  background-color: #10b981;
+  border-color: #10b981;
+  border-radius: 6px;
+}
+
+.ant-popconfirm .ant-btn-primary:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.ant-popconfirm .ant-btn-default {
+  border-radius: 6px;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.ant-popconfirm .ant-btn-default:hover {
+  border-color: #9ca3af;
+  color: #374151;
 }
