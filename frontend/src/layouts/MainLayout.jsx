@@ -148,8 +148,8 @@ const MainLayout = () => {
           >
             {!collapsed && (
               <>
-                <div className="logo-title">LING BLESSED</div>
-                <div className="logo-subtitle">YOUR DONATION APP</div>
+                <div className="logo-title">访客系统</div>
+               
               </>
             )}
             {collapsed && <CustomerServiceOutlined />}

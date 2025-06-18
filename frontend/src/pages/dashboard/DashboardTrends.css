@@ -1,15 +1,15 @@
 .trends-card {
   margin-bottom: 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+  background: #ffffff;
   overflow: hidden;
 }
 
 .trends-card .ant-card-head {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-  background: rgba(248, 250, 252, 0.5);
+  border-bottom: 1px solid #f0f0f0;
+  background: transparent;
   padding: 16px 24px;
 }
 
@@ -26,12 +26,9 @@
 }
 
 .card-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #262626;
   margin: 0;
 }
 
@@ -91,9 +88,9 @@
 }
 
 .chart-container {
-  padding: 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
   width: 100%;
   position: relative;
 }

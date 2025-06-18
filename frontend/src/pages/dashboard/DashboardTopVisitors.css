@@ -1,9 +1,9 @@
 .top-visitors-card {
   margin-bottom: 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: none;
+  background: #ffffff;
   overflow: hidden;
   height: 100%;
   display: flex;
@@ -11,25 +11,22 @@
 }
 
 .top-visitors-card .ant-card-head {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-  background: rgba(248, 250, 252, 0.5);
-  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: transparent;
+  padding: 16px 24px;
 }
 
 .top-visitors-card .ant-card-body {
-  padding: 12px;
+  padding: 24px;
   background: transparent;
   flex: 1;
   overflow: hidden;
 }
 
 .card-title {
-  font-size: 18px;
-  font-weight: normal;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
   margin: 0;
 }
 
@@ -68,11 +65,14 @@
 }
 
 .visitors-table .ant-table-thead > tr > th {
-  background: rgba(248, 250, 252, 0.8);
-  border-bottom: 2px solid rgba(148, 163, 184, 0.2);
-  font-weight: 600;
-  color: #374151;
-  font-size: 13px;
+  background: transparent;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 500;
+  color: #8c8c8c;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
 }
 
 .visitors-table .ant-table-tbody > tr {
@@ -80,20 +80,14 @@
 }
 
 .visitors-table .ant-table-tbody > tr:hover {
-  background: rgba(99, 102, 241, 0.05);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: #fafafa;
 }
 
 .visitors-table .ant-table-tbody > tr > td {
-  padding: 1px 3px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
   vertical-align: middle;
-  font-size: 13px;
-}
-
-.visitors-table .ant-table-thead > tr > th {
-  padding: 4px 3px;
+  font-size: 14px;
 }
 
 /* 排名样式 */

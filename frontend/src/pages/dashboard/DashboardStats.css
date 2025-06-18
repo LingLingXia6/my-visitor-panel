@@ -1,6 +1,6 @@
 .dashboard-container {
-  padding: 24px;
-  background-color: #f5f5f5;
+  padding: 0;
+  background: transparent;
 }
 
 .dashboard-loading {
@@ -11,7 +11,7 @@
 }
 
 .statistic-card {
-  border-radius: 12px;
+  border-radius: 16px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
@@ -25,7 +25,7 @@
 }
 
 .statistic-card .ant-card-body {
-  padding: 20px;
+  padding: 24px;
 }
 
 .card-content {
@@ -49,6 +49,7 @@
   justify-content: center;
   font-size: 20px;
   margin-right: 16px;
+  opacity: 0.1;
 }
 
 .card-right {
@@ -67,15 +68,16 @@
 }
 
 .card-value .ant-statistic-content {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: bold;
   line-height: 1.2;
+  color: #262626;
 }
 
 .statistic-card .card-title {
   font-size: 14px;
   color: #8c8c8c;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   font-weight: 400;
 }
 
@@ -84,14 +86,15 @@
   font-weight: 500;
   display: flex;
   align-items: center;
+  margin-top: 8px;
 }
 
 .card-chart {
   position: absolute;
-  right: 0;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 /* 响应式设计 */
